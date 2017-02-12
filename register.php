@@ -23,20 +23,16 @@
   <script type='text/javascript'>
     $(document).ready(function() {
         $('select').material_select();
-
-        $('.datepicker').pickadate({
-            selectMonths: true, // Creates a dropdown to control month
-            selectYears: 75 // Creates a dropdown of 15 years to control year
-        });
     });
   </script>
 
   <!-- JS Scripts -->
 
 <div class ="card">
-  <div class="card-content black-text">
+  <center>
     <img src="images/logo1.png" alt="" class="responsive-img">
-    </br>
+  </center>
+  <div class="card-content black-text">
     <div class="row">
         <form class='col s12'>
           <div class='row'>
@@ -107,26 +103,20 @@
                       REGISTER
                   </button>
               </div>
+              <div class="input-field col s12 center">
+                  <font family="roboto" size="1px" color="black">
+                      Already have an account? 
+                  </font>
+                      <a href='login.php'>
+                        <font family="roboto" size="1px">
+                          Login
+                        </font>
+                      </a>
+              </div>
           </div>
         </form>
-       <!--  <br>
-        <div class="input-field center"><br>
-          <button class="btn waves-effect waves-light pink lighten-2" type="submit" name="action">
-            REGISTER
-          </button>
-        </div> 
-        <center>
-        <a href="login.php" id="forgot">
-          <font family="roboto" size="1px" color="black">
-            Already have an account? 
-          </font>
-          <font family="roboto" size="1px">
-            Login
-          </font>
-        </a>
-        </center> -->
+    </div>
   </div>
-</div>
 </div>
 </body>
 </html>

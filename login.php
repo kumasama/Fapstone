@@ -21,25 +21,7 @@
 
   <script type='text/javascript'>
     $(document).ready(function() {
-      $('.nav-wrapper').click(function(){
-        $( "#centerPreloader" ).toggle();
-      });
-
-      $('.modal').modal(); 
-
-      //modal 
-      var interval;
-      $( ".card" )
-        .mouseup(function() {
-          clearInterval(interval);
-        })
-        .mousedown(function() {
-          console.log('Mouse Down!');
-          interval = setInterval(function() {
-            $('#modal1').modal('open');
-            clearInterval(interval);
-          }, 1500);
-        });
+      
     });
   </script>
 
@@ -47,7 +29,9 @@
 
 <div class ="card">
   <div class="card-content black-text">
-<img src="images/log-white.png" alt="" class="responsive-img">
+<center>
+<img src="images/logo1.png" alt="" class="responsive-img">
+</center>
 <p class="center login-form-text">Express yourself through OOTD</p>
 </br>
 <div id="login_div">
@@ -55,7 +39,7 @@
 
 <div class="input-field">
 <input class="validate" id="email" type="email">
-<label for="email" data-error="wrong" data-success="right">Email</label>
+<label for="email" data-error="wrong" data-success="right">Email/Username</label>
 </div>
 
 <div class="input-field">
