@@ -1,3 +1,15 @@
+<?php
+	session_start();
+	//redirect to login page if user does not login yet.
+	if(!isset($_SESSION['islogin']))
+	{
+		header('location: login.php');
+		exit();
+	} else {
+		$id = $_SESSION['user_id'];
+		//
+	}
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,7 +33,12 @@
 
 	<script type='text/javascript'>
 		$(document).ready(function() {		
-			
+			$('.button-collapse').sideNav({
+		      menuWidth: 300, // Default is 300
+		      edge: 'left', // Choose the horizontal origin
+		      closeOnClick: true, // Closes side-nav on <a> clicks, useful for Angular/Meteor
+		      draggable: true // Choose whether you can drag to open on touch screens
+		    });
 		});
 	</script>
 
@@ -29,6 +46,9 @@
 
 	<!-- Start Code here -->
 
+	<!--Side Navigation Bar -->
+	<?php include 'sidenav.php'; ?>
+	<!--Side Navigation Bar -->
 
 	<!-- Navigation Bar -->
 	 <div class="navbar-fixed">
