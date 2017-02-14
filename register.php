@@ -36,9 +36,9 @@
         $('#btn_Register').click(function(event) {
           if(checkInputStatus()) {
               console.log('It can now be added to database!');
-              //register();
+              register();
               // ifExistingUsername();
-             checkIfExisting('username', document.getElementById('username').value);
+              // checkIfExisting('username', document.getElementById('username').value);
           }
           else {
               console.log('Not yet ready!');
@@ -82,6 +82,9 @@
             }).then(function(text) {
                 if(text=='Success') {
                   console.log('Success');
+                  clearFields();
+                  alert('You have been registered!');
+                  window.location.href = "login.php";
                 } else {
                   console.log('Failed');
                 }
@@ -132,6 +135,16 @@
             console.log(error_prompts);
 
             return (error_prompts.length>0)?false:true;
+        }
+
+        function clearFields() {
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('repassword').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('last_name').value = ''; 
+            document.getElementById('first_name').value = ''; 
+            document.getElementById('birthdate').value = '';
         }
 
         function validateEmail(txt) {

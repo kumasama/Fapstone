@@ -45,6 +45,25 @@
 		return array($arr_keys, $arr_vals);
 	}
 
+	function login($user, $password) {
+	    try {
+	      $data = array($user,$user,$password);
+	      $db = PDO_Connection();
+	      $sql = 'SELECT id FROM chasers WHERE (username=? OR email=?) and password=?';
+	      $stmt = $db->prepare($sql);
+	      $stmt->execute($data);
+	      if($stmt->rowCount()>0) {
+	        $result = $stmt->fetch();
+	      } else {
+	        $result = array('id'=>-1);
+	      }
+	      $db = null;
+	    } catch(PDOException $e) {
+	      echo $e->getMessage();
+	    }
+    	return $result['id'];
+  	}
+
 
 	//SQL Commands
 

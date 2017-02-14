@@ -1,3 +1,28 @@
+<?php
+  session_start();
+
+  if(isset($_SESSION['islogin'])) {
+      header('Location: index.php');
+      exit();
+  }
+
+  require_once('backend/functions.php');
+
+  $prompt_msg = '';
+
+  if(count($_POST)>0) {
+      $id = login($_POST['username'], $_POST['password']);
+      if($id > 0 ) {
+          $_SESSION['islogin'] = true;
+          $_SESSION['user_id'] = $id;
+          header('Location:index.php');
+          exit();
+      } else {
+          $prompt_msg = 'Incorrrect chaser credentials!';
+      }
+  }
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -36,22 +61,27 @@
 </br>
 <div id="login_div">
 <form method="post">
+  <div class="input-field">
+  <input class="validate" name='username' id="username" type="text">
+  <label for="username">Email/Username</label>
+  </div>
 
-<div class="input-field">
-<input class="validate" id="email" type="email">
-<label for="email" data-error="wrong" data-success="right">Email/Username</label>
-</div>
-
-<div class="input-field">
-<input id="password" type="password">
-<label for="password">Password</label>
-</div>
+  <div class="input-field">
+  <input id="password" name='password' type="password">
+  <label for="password">Password</label>
+  </div>
         
-<div class="input-field center">
-<button class="btn waves-effect waves-light pink lighten-4" type="submit" name="action">LOGIN</button>
-</div> </br> </br>
-
-<p>
+  <div class="input-field center">
+    <button class="btn waves-effect waves-light pink lighten-4" type="submit" name="action">  LOGIN
+    </button>
+  </div> 
+</form>
+</br> 
+<div><center>
+<?php echo $prompt_msg; ?>
+</center></div>
+</br>
+<p> 
 <center>
 <a href="#" id="register">Register Now!</a>
 <a href="#" id="forgot">Forgot password?</a>
