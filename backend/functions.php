@@ -1,6 +1,6 @@
 <?php
 	function PDO_Connection() {
-		return new PDO('mysql:host=127.0.0.1;dbname=capstone', 'root', '131322');
+		return new PDO('mysql:host=127.0.0.1;dbname=ootdme', 'root', '131322');
 	}
 
 	function checkExisting($arr, $table_name) {
@@ -28,6 +28,19 @@
 			$sql = insertSQL($data[0], $table_name);
 			$stmt = $db->prepare($sql);
 			$success = $stmt->execute($data[1]);
+			$db = null;
+		}catch(PDOException $e) {
+			echo $e->getMessage();
+		}
+		return $success;
+	}
+
+	function deleteById($id, $table_name) {
+		try {
+			$db = PDO_Connection();
+			$sql = 'delete from ' . $table_name . ' where id=?';
+			$stmt = $db->prepare($sql);
+			$success = $stmt->execute(array($id));
 			$db = null;
 		}catch(PDOException $e) {
 			echo $e->getMessage();
@@ -64,8 +77,66 @@
     	return $result['id'];
   	}
 
-
+  	function fetchById($id, $table_name) {
+  		try {
+  			$db = PDO_Connection();
+  			$sql = 'select * from ' . $table_name . ' where id = ?';
+  			$stmt = $db->prepare($sql);
+  			$stmt->execute(array($id));
+  			$result = $stmt->fetch();
+  			$db = null;
+  		} catch(PDOException $e) {
+  			echo $e->getMessage();
+  		}
+  		return $result;
+  	}
 	//SQL Commands
+
+	function updateSQL($arr, $table_name) {
+		$sql = 'UPDATE ' . $table_name . ' SET ';
+		for($i = 0; $i<count($arr); $i++)  {
+			$sql = $sql . $arr[$i] . '=?';
+			if($i < count($arr) - 1)
+				$sql = $sql . ', ';
+		}
+		return $sql;
+	}
+
+	function fetchAll($table_name) {
+		try {
+			$db = PDO_Connection();
+			$sql = 'select * from ' . $table_name;
+			$stmt = $db->prepare($sql);
+			$stmt->execute();
+			$result = $stmt->fetchAll();
+			$db = null;
+		} catch(PDOException $e) {
+			echo $e->getMessage();
+		}
+		return $result;
+	}
+
+	function fetchItems() {
+		try {
+			$db = PDO_Connection();
+			$sql = 'select * from items where id not in(select item_id from closet_items)';
+			$stmt = $db->prepare($sql);
+			$stmt->execute();
+			$result = $stmt->fetchAll();
+			$db = null;
+		} catch(PDOException $e) {
+			echo $e->getMessage();
+		}
+		return $result;
+	}
+
+	function fetchClosetItems() {
+
+	}	
+
+	function fetchGarageItems() {
+
+	}
 
 	function insertSQL($arr, $table_name) {
 		$sql = 'INSERT INTO ' . $table_name . ' (';
@@ -84,4 +155,18 @@
 	}
 
 	//SQL Commands
+
+	function getPK($table_name) {
+			try {
+				$db = PDO_Connection();
+				$sql = 'SHOW COLUMNS FROM ' . $table_name;
+				$stmt = $db->prepare($sql);
+				$stmt->execute();
+				$result = $stmt->fetch();
+				$db = null;
+			} catch(PDOException $e) {
+				echo $e->getMessage();
+			}
+			return $result[0];
+		}
 ?>

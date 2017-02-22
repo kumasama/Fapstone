@@ -15,3 +15,14 @@ body {
     float: left;
     margin-top: -17px;
 }
+
+#imgOutp {
+	position: relative;
+}
+#selectIMG {
+	position: absolute; 
+	/*right: 5px; 
+	top: 5px;*/ 
+	top: 212px;
+	right: 35px;
+}
