@@ -114,12 +114,12 @@
 			echo $e->getMessage();
 		}
 		return $result;
-	}
+	}  
 
-	function fetchItems() {
+	function fetchAll_sort($table_name, $field, $by) {
 		try {
 			$db = PDO_Connection();
-			$sql = 'select * from items where id not in(select item_id from closet_items)';
+			$sql = 'select * from ' . $table_name . ' ORDER BY ' . $field . ' ' . $by;
 			$stmt = $db->prepare($sql);
 			$stmt->execute();
 			$result = $stmt->fetchAll();
@@ -130,6 +130,34 @@
 		return $result;
 	}
 
+	function fetchItems_search($id, $search) {
+		try {
+			$db = PDO_Connection();
+			$sql = "select * from items where ((name like '%" . $search . "%') or (type like '%" . $search . "%') or (brand like '%" . $search . "%')) and (chaser_id=?) and (id not in(select item_id from closet_items))";
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array($id));
+			$result = $stmt->fetchAll();
+			$db = null;
+		} catch(PDOException $e) {
+			echo $e->getMessage();
+		}
+		return $result;
+	}
+
+	function fetchItems($chaser_id) {
+		try {
+			$db = PDO_Connection();
+			$sql = 'select * from items where (chaser_id=?) and (id not in(select item_id from closet_items))';
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array($chaser_id));
+			$result = $stmt->fetchAll();
+			$db = null;
+		} catch(PDOException $e) {
+			echo $e->getMessage();
+		}
+		return $result;
+	}
+	
 	function fetchClosetItems() {
 
 	}	

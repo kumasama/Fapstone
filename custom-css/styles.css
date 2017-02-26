@@ -26,3 +26,13 @@ body {
 	top: 212px;
 	right: 35px;
 }
+
+/*::-webkit-scrollbar {
+  width: 1px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: white;
+}*/
