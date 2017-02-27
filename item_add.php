@@ -71,6 +71,9 @@
 
   <script type='text/javascript'>
     $(document).ready(function() {
+
+      $("input").attr("autocomplete","off");
+      
       $('.chips-placeholder').material_chip({
           placeholder: 'Enter a tag',
           secondaryPlaceholder: '+Tag',
@@ -82,6 +85,7 @@
 
       $('#form_submit').click(function() {
         if($('#imgInp').val() != '' && $('#item_name').val() != '') {
+            $(this).prop('disabled', true);
             $('#new_post').submit();
         }
       });
@@ -133,9 +137,9 @@
       <div class = "col s12">
     <form id='new_post' method="post" enctype="multipart/form-data">
       <img id="imgOutp" src="images/black.png" style='width: 100%; height:200px; margin-top: 10px;'/>
-      <input type="file" name="imgInp" id='imgInp' accept="image/*" class='hidden' style='display: none;'>
+      <input type="file" name="imgInp" id='imgInp' accept="image/*" class='hidden'>
       </div>
-              <i id='selectIMG' class="material-icons center">camera_alt</i>
+        <i id='selectIMG' class="material-icons center">camera_alt</i>
 		    <div class="row">
 			    <div class="col s12">
 			      	<div class="row">

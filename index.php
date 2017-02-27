@@ -49,8 +49,6 @@
 	<!-- JS Scripts -->
 
 	<!-- Start Code here -->
-
-
 	<!-- Navigation Bar -->
 	 <div class="navbar-fixed">
 	    <nav>

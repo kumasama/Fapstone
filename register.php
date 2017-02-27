@@ -41,6 +41,8 @@ body {
   <script type='text/javascript'>
     $(document).ready(function() {
 
+        $("input").attr("autocomplete","off");
+
         $('select').material_select();
 
         $('.datepicker').pickadate({

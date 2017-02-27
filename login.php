@@ -52,7 +52,10 @@ body {
   <!--Import jQuery before materialize.js-->
   <script type="text/javascript" src="jquery/jquery-3.1.1.min.js"></script>
   <script type="text/javascript" src="materialize/js/materialize.min.js"></script>
-
+<script>
+$(document).ready(function() {
+  $("input").attr("autocomplete","off");}
+});
 </script>
 <div class='row'>
   <div class='card transparent'>

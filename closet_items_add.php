@@ -1,6 +1,23 @@
 <?php
+  session_start();
+
+  if(!isset($_SESSION['islogin'])) {
+    header('Location: login.php');
+    exit();
+  }
   require_once('backend/functions.php');
+
+  $id = $_SESSION['chaser_id'];
+  
   $search = (isset($_GET['search']))?$_GET['search']:'';
+
+  if(!isset($_GET['closet_id'])) {
+      header('Location:closets.php');
+      exit();
+  } else {
+      $closet_id = $_GET['closet_id'];
+      $closet = fetchById($closet_id, 'closets');
+  }
 
   function hide() {
       $str = "style='display: none'";
@@ -30,6 +47,15 @@
 
   <script type='text/javascript'>
     $(document).ready(function() {
+        $('.modal').modal({
+            dismissible: true, // Modal can be dismissed by clicking outside of the modal
+            opacity: .6, // Opacity of modal background
+            inDuration: 300, // Transition in duration
+            outDuration: 200, // Transition out duration
+            startingTop: '4%', // Starting top style attribute
+            endingTop: '10%', // Ending top style attribute
+        });
+
         $('#clear_search').on('click', function() {
             $('#search-content').html('');
             $('#searchcontent').hide();
@@ -37,6 +63,13 @@
             $('#search').val('');
         });
     });
+
+    function openModal(path) {
+        $('#modalImg').prop('src', path);
+        $('#modal1').modal('open');
+    }
+
+
   </script>
 
   <!-- JS Scripts -->
@@ -47,9 +80,13 @@
    <div class="navbar-fixed"'>
       <nav class='nav'>
         <div class="nav-wrapper red lighten-1">
-          <a href="#" class="brand-logo center">Closet</a>
           <ul id="nav-mobile">
-            <li><a href="index.php"><i class="material-icons">arrow_back</i></a></li>
+            <a href="#" class="brand-logo center"><img src="images/closet.png" alt="OOTDme" height="65" style="margin-top:-5px;">
+            <li>
+              <a href="closet_items.php?closet_id=<?php echo $closet_id; ?>">
+                <i class="material-icons">arrow_back</i>
+              </a>
+            </li>
               <a href="#" id='clear_search'><i class="material-icons right">clear</i></a>
           </ul>
         </div>
@@ -60,9 +97,9 @@
         <div class="nav-wrapper">
           <form>
             <div class="input-field">
-              <input id="search" name='search' value='<?php echo $search; ?>' type="search">
+              <input name='closet_id' type='hidden' value='<?php echo $closet_id; ?>'/>
+              <input id="search" placeholder='Search Item' name='search' value='<?php echo $search; ?>' type="search">
               <label class="label-icon" for="search"><i class="material-icons">search</i></label>
-              <i class="material-icons">close</i>
             </div>
           </form>
         </div>
@@ -70,83 +107,103 @@
     </div>
    <!-- Navigation Bar -->
    <div class='row' id='search-content' <?php if($search == '') hide();?> >
-   EASY EASY
-   </div>
-   <div class="row" id='main-content' <?php if($search != '') hide();?> > 
-      <?php for($x = 0; $x<30; $x++) { ?>
-        <div class="col s12 m12"> <!-- Container Div -->
-          <div class='card grey lighten-5'>
-                <a class='dropdown-button right' href='#' data-activates='dropdownez'>
-            </br>
-                    <i class="material-icons">more_vert</i>
-                  </a>
-                  <ul id='dropdownez' class='dropdown-content'>
-              <li><a href="#!"><span class='pink-text darken-1'>Edit</span></a></li>
-              <li><a href="#!"><span class='pink-text darken-1'>Delete</span></a></li>
-              <li><a href="#!"><span class='pink-text darken-1'>Report</span></a></li>
-            </ul>
-                <ul class='collection' style='border: none !important;'>
-                  <li class="collection-item avatar grey lighten-5">
-                    <img src="images/k.jpg" alt="" class="circle" style='width: 50px; height: 50px;'>
-                    <span class='Title'>
-                      <b>Glaichi Mae</b>
-                    </span>
-                    <p class='grey-text'>
-                      @glaichimae08
-                    </p>
-                  </li>
-                </ul>
-              <div class="card-image">
-              <p style='padding-left: 10px;'>
-                When it's almost summer!When it's almost summer!When it's almost summer!
-                <br />
-                <span class='chip'>
-              #Tropical
-            </span>
-            <span class='chip'>
-              #Trop
-            </span>
-            <span class='chip'>
-              #Tropical
-            </span>
-
-            </br> Flower Crown - Claires
-           </br> Flowery Bra - Topshop
+      <blockquote>
+        <b><?php echo $closet['name']; ?></b>
+      </blockquote>
+      <?php 
+          if($search!='') {
+      ?>
+      <ul class='collection'>
+        <?php 
+          $items = fetchItems_search($id, $search);
+          if(count($items)>0) {
+            foreach($items as $item) {
+        ?>
+            <li class="collection-item avatar">
+              <img src="<?php echo $item['photo']; ?>" alt="" class="circle">
+              <span class="title"><?php echo $item['name']; ?></span>
+              <p><?php echo $item['brand']; ?><br>
+                 <?php echo $item['type']; ?> <br>
+                 <?php echo (trim($item['size']))!=''?$item['size']:'&nbsp;';?>
               </p>
-              <img src="images/hawaii.jpg" alt="" class="responsive-img">
-              <table>
-              <tr>  
-                <td class='center'>
-                    <a href="#!favorite">
-                      10 <br \>
-                <i class="material-icons">favorite_border</i>
+              <div class='secondary-content' style='margin-top: 53px;'>
+                  <a onclick='openModal("<?php echo $item['photo']; ?>")'><span class='red-text text-darken-2'><i class="material-icons">zoom_in</i></span></a>&nbsp; &nbsp; &nbsp;
+                  <a href="add_closet_item.php?closet_id=<?php echo $closet_id; ?>&item_id=<?php echo $item['id']; ?>">
+                <span class='red-text text-darken-2'>
+                  <i class="material-icons">add_circle</i>
+                </span>
               </a>
-                </td>
-                <td class='center'>
-                    <a href="#!comments">
-                      55<br \>
-                  <i class="material-icons">comment</i>
-                </a>
-                </td>
-                <td class='center'>
-                    <a href="#!repeat">
-                      20 <br \>
-                <i class="material-icons">repeat</i>
-              </a>
-                </td>
-                <td class='center'>
-                    <a href="#!turned_in">
-                      123 <br \>
-                  <i class="material-icons">turned_in</i>
-                </a>
-                </td>
-              </tr>
-              </table>
-            </div>
-          </div>
-        </div> <!-- Container Div -->
+              </div>
+            </li>
+            <?php } ?>
         <?php } ?>
-      </div> 
-   <!-- Content Area -->
+      </ul>
+      <?php } ?>
+   </div>
+   <!-- Main Content -->
+   <div class="row" id='main-content' <?php if($search != '') hide();?> >      
+      <blockquote>
+        <b><?php echo $closet['name']; ?></b> <br/>
+        Items that can be added to this closet
+      </blockquote>
+   <?php 
+        $items = fetchItems($id);
+        if(count($items)>0) {
+   ?>
+   <ul class="collection">
+    <!-- <li class="collection-item avatar">
+      <img src="images/yuna.jpg" alt="" class="circle">
+      <span class="title">Title</span>
+      <p>First Line <br>
+         Second Line
+      </p>
+      <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+    </li> -->
+    <?php 
+ 
+          foreach($items as $item) {
+    ?>
+        <li class="collection-item avatar">
+          <img src="<?php echo $item['photo']; ?>" alt="" class="circle">
+          <span class="title"><?php echo $item['name']; ?></span>
+          <p><?php echo $item['brand']; ?><br>
+             <?php echo $item['type']; ?> <br>
+             <?php echo (trim($item['size']))!=''?$item['size']:'&nbsp;';?>
+          </p>
+          <div class='secondary-content' style='margin-top: 53px;'>
+              <a onclick='openModal("<?php echo $item['photo']; ?>")'><span class='red-text text-darken-2'><i class="material-icons">zoom_in</i></span></a>&nbsp; &nbsp; &nbsp;
+              <a href="add_closet_item.php?closet_id=<?php echo $closet_id; ?>&item_id=<?php echo $item['id']; ?>">
+                <span class='red-text text-darken-2'>
+                  <i class="material-icons">add_circle</i>
+                </span>
+              </a>
+          </div>
+        </li>
+        <?php } ?>
+    <!-- <li class="collection-item avatar">
+      <i class="material-icons circle red">play_arrow</i>
+      <span class="title">Semi-Nude Blue Ripped Jeans</span>
+      <p>Brand <br>
+         Type <br>
+         Size
+      </p>
+      <div class='secondary-content' style='margin-top: 53px;'>
+          <a href="#modal1"><span class='red-text text-darken-2'><i class="material-icons">zoom_in</i></span></a>&nbsp; &nbsp; &nbsp;
+          <a href="#!"><span class='red-text text-darken-2'><i class="material-icons">mode_edit</i></span></a> &nbsp; &nbsp; &nbsp;
+          <a href="#!"><span class='red-text text-darken-2'><i class="material-icons">delete_forever</i></span></a> 
+      </div>
+    </li> -->
+  </ul>
+  <?php } ?>
+    </div>
+  <!-- Main Content -->
+   <!-- Modal Structure -->
+    <!-- Modal Trigger -->
+  <!-- Modal Structure -->
+  <div id="modal1" class="modal transparent">
+    <div class="modal-content">
+      <img id='modalImg' src='images/c1.jpg' class="responsive-img">
+    </div>
+  </div>   
 </body>
 </html>

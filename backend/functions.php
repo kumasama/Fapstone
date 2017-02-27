@@ -114,7 +114,7 @@
 			echo $e->getMessage();
 		}
 		return $result;
-	}  
+	} 
 
 	function fetchAll_sort($table_name, $field, $by) {
 		try {
@@ -129,6 +129,22 @@
 		}
 		return $result;
 	}
+
+	function fetchClosetItems_search($closet_id, $search) {
+		try {
+			$db = PDO_Connection();
+			// $sql = "select * from items where ((name like '%" . $search . "%') or (type like '%" . $search . "%') or (brand like '%" . $search . "%')) and (id in(select item_id from closet_items where closet_id=?))";
+			$sql = "select * from closet_items where closet_id=? and (item_id in(select id from items where ((name like '%" . $search . "%') or (type like '%" . $search . "%') or (brand like '%" . $search . "%'))))";
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array($closet_id));
+			$result = $stmt->fetchAll();
+			$db = null;
+		} catch(PDOException $e) {
+			echo $e->getMessage();
+		}
+		return $result;
+	}
+
 
 	function fetchItems_search($id, $search) {
 		try {
@@ -157,13 +173,82 @@
 		}
 		return $result;
 	}
-	
-	function fetchClosetItems() {
 
+	function fetchClosets($chaser_id) {
+		try {
+			$db = PDO_Connection();
+			$sql = 'select * from closets where chaser_id=?';
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array($chaser_id));
+			$result = $stmt->fetchAll();
+			$db = null;
+		} catch(PDOException $e) {
+			echo $e->getMessage();
+		}
+		return $result;
+	}
+	
+	function fetchClosetItems($id) {
+		try {
+			$db = PDO_Connection();
+			$sql = 'select * from closet_items where closet_id=?';
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array($id));
+			$result = $stmt->fetchAll();
+			$db = null;
+		} catch(PDOException $e) {
+			echo $e->getMessage();
+		}
+		return $result;
 	}	
 
 	function fetchGarageItems() {
 
+	}
+
+	function if_Follower($id, $chaser_id) {
+      $follower = false;
+      try {
+          $db = PDO_Connection();
+          $sql = 'select count(*) from networks where follow_id=? and chaser_id=?';
+          $stmt = $db->prepare($sql);
+          $stmt->execute(array($chaser_id, $id));
+          $result = $stmt->fetch();
+          if($result[0]>0) {
+              $follower = true;
+          }
+      } catch(PDOException $e) {
+          echo $e->getMessage();
+      }
+      return $follower;
+	}
+
+	function count_followers($id) {
+		try {
+			$db = PDO_Connection();
+			$sql = 'select count(*) from networks where follow_id=?';
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array($id));
+			$result = $stmt->fetch();
+			$db = null;
+		} catch(PDOException $e) {
+			echo $e->getMessage();
+		}
+		return $result[0];
+	}
+
+	function count_following($id) {
+		try {
+			$db = PDO_Connection();
+			$sql = 'select count(*) from networks where chaser_id=?';
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array($id));
+			$result = $stmt->fetch();
+			$db = null;
+		} catch(PDOException $e) {
+			echo $e->getMessage();
+		}
+		return $result[0];
 	}
 
 	function insertSQL($arr, $table_name) {

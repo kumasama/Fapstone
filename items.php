@@ -122,14 +122,6 @@
    <!-- Main Content -->
    <div class="row" id='main-content' <?php if($search != '') hide();?> >
    <ul class="collection">
-    <!-- <li class="collection-item avatar">
-      <img src="images/yuna.jpg" alt="" class="circle">
-      <span class="title">Title</span>
-      <p>First Line <br>
-         Second Line
-      </p>
-      <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-    </li> -->
     <?php 
         $items = fetchItems($id);
         if(count($items)>0) {
@@ -145,32 +137,25 @@
           <div class='secondary-content' style='margin-top: 53px;'>
               <a onclick='openModal("<?php echo $item['photo']; ?>")'><span class='red-text text-darken-2'><i class="material-icons">zoom_in</i></span></a>&nbsp; &nbsp; &nbsp;
               <a href="#!"><span class='red-text text-darken-2'><i class="material-icons">mode_edit</i></span></a> &nbsp; &nbsp; &nbsp;
-              <a href="#!"><span class='red-text text-darken-2'><i class="material-icons">delete_forever</i></span></a> 
+              <a href="delete_item.php?item_id=<?php echo $item['id']; ?>"><span class='red-text text-darken-2'><i class="material-icons">delete_forever</i></span></a> 
           </div>
         </li>
         <?php } ?>
     <?php } ?>
-    <!-- <li class="collection-item avatar">
-      <i class="material-icons circle red">play_arrow</i>
-      <span class="title">Semi-Nude Blue Ripped Jeans</span>
-      <p>Brand <br>
-         Type <br>
-         Size
-      </p>
-      <div class='secondary-content' style='margin-top: 53px;'>
-          <a href="#modal1"><span class='red-text text-darken-2'><i class="material-icons">zoom_in</i></span></a>&nbsp; &nbsp; &nbsp;
-          <a href="#!"><span class='red-text text-darken-2'><i class="material-icons">mode_edit</i></span></a> &nbsp; &nbsp; &nbsp;
-          <a href="#!"><span class='red-text text-darken-2'><i class="material-icons">delete_forever</i></span></a> 
-      </div>
-    </li> -->
   </ul>
+      <br /><br /><br />
     </div>
   <!-- Main Content -->
    <!-- Modal Structure -->
     <!-- Modal Trigger -->
   <!-- Modal Structure -->
-  <div id="modal1" class="modal transparent">
+  <!-- <div id="modal1" class="modal transparent">
     <div class="modal-content">
+      <img id='modalImg' src='images/c1.jpg' class="responsive-img">
+    </div>
+  </div>   -->
+  <div id="modal1" class="modal transparent">
+    <div class="modal-content" style='padding: 0px !important;'>
       <img id='modalImg' src='images/c1.jpg' class="responsive-img">
     </div>
   </div>   
