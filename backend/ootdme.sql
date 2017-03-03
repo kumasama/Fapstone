@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 26, 2017 at 11:38 AM
+-- Generation Time: Mar 01, 2017 at 06:16 AM
 -- Server version: 5.7.11
 -- PHP Version: 5.6.19
 
@@ -33,7 +33,7 @@ CREATE TABLE `chasers` (
   `middle_name` varchar(63) DEFAULT NULL,
   `username` varchar(31) NOT NULL,
   `password` varchar(31) NOT NULL,
-  `photo` varchar(512) DEFAULT NULL,
+  `photo` varchar(512) DEFAULT 'images/default.png',
   `gender` varchar(10) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
   `birthdate` date NOT NULL,
@@ -44,13 +44,17 @@ CREATE TABLE `chasers` (
   `status` tinyint(4) NOT NULL DEFAULT '1'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `chasers`
+-- Table structure for table `chases`
 --
 
-INSERT INTO `chasers` (`id`, `last_name`, `first_name`, `middle_name`, `username`, `password`, `photo`, `gender`, `address`, `birthdate`, `regdate`, `email`, `bio`, `fb`, `status`) VALUES
-(1, 'Sama', 'Kuma', NULL, 'kumasama', '131322Clear', NULL, NULL, NULL, '2003-03-01', '2017-02-26 15:01:32', 'kumaaa.sama@gmail.com', NULL, NULL, 1),
-(2, 'Mae', 'Glaichi', NULL, 'glaichi', '131322Clear', NULL, NULL, NULL, '2003-03-02', '2017-02-26 19:13:18', 'glaichimae@gmail.com', NULL, NULL, 1);
+CREATE TABLE `chases` (
+  `id` int(11) NOT NULL,
+  `post_id` int(11) NOT NULL,
+  `chaser_id` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -60,8 +64,8 @@ INSERT INTO `chasers` (`id`, `last_name`, `first_name`, `middle_name`, `username
 
 CREATE TABLE `closets` (
   `id` int(11) NOT NULL,
-  `name` varchar(127) NOT NULL,
-  `type` varchar(31) NOT NULL,
+  `name` varchar(63) NOT NULL,
+  `description` varchar(255) NOT NULL,
   `chaser_id` int(11) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -80,6 +84,61 @@ CREATE TABLE `closet_items` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `comments`
+--
+
+CREATE TABLE `comments` (
+  `id` int(11) NOT NULL,
+  `comment` varchar(256) NOT NULL,
+  `post_id` int(11) NOT NULL,
+  `chaser_id` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `complaints_post`
+--
+
+CREATE TABLE `complaints_post` (
+  `id` int(11) NOT NULL,
+  `post_id` int(11) NOT NULL,
+  `reporter_id` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `complaints_user`
+--
+
+CREATE TABLE `complaints_user` (
+  `id` int(11) NOT NULL,
+  `reported_id` int(11) NOT NULL,
+  `reporter_id` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `garage_sales`
+--
+
+CREATE TABLE `garage_sales` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `start_time` varchar(63) NOT NULL,
+  `end_time` varchar(63) NOT NULL,
+  `items` varchar(255) NOT NULL,
+  `place` varchar(511) NOT NULL,
+  `chaser_id` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `items`
 --
 
@@ -92,15 +151,6 @@ CREATE TABLE `items` (
   `photo` varchar(255) NOT NULL,
   `chaser_id` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `items`
---
-
-INSERT INTO `items` (`id`, `name`, `type`, `brand`, `size`, `photo`, `chaser_id`) VALUES
-(1, 'Blue Ripped Jeans', 'Pants', 'Anthology', ' ', 'uploads/225293037418663c2.png', 1),
-(2, 'GG Uips', 'Skirt', 'Art & Soul', ' ', 'uploads/12539130411121v3.jpg', 1),
-(3, 'Something to wear', 'Shoes', 'Balmain', '12', 'uploads/1329058519592o.jpg', 1);
 
 -- --------------------------------------------------------
 
@@ -299,6 +349,18 @@ INSERT INTO `item_categories` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `networks`
+--
+
+CREATE TABLE `networks` (
+  `id` int(11) NOT NULL,
+  `follow_id` int(11) NOT NULL,
+  `chaser_id` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `ootd_categories`
 --
 
@@ -334,6 +396,35 @@ INSERT INTO `ootd_categories` (`id`, `name`) VALUES
 (20, 'Street Style\r\n'),
 (21, 'Throwback');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `posts`
+--
+
+CREATE TABLE `posts` (
+  `id` int(11) NOT NULL,
+  `diary` varchar(511) DEFAULT NULL,
+  `categories` varchar(511) DEFAULT NULL,
+  `items` varchar(255) DEFAULT NULL,
+  `photo` varchar(255) NOT NULL,
+  `chaser_id` int(11) NOT NULL,
+  `date_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reactions`
+--
+
+CREATE TABLE `reactions` (
+  `id` int(11) NOT NULL,
+  `type` varchar(127) NOT NULL,
+  `post_id` int(11) NOT NULL,
+  `chaser_id` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
 --
 -- Indexes for dumped tables
 --
@@ -342,6 +433,12 @@ INSERT INTO `ootd_categories` (`id`, `name`) VALUES
 -- Indexes for table `chasers`
 --
 ALTER TABLE `chasers`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `chases`
+--
+ALTER TABLE `chases`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -354,6 +451,30 @@ ALTER TABLE `closets`
 -- Indexes for table `closet_items`
 --
 ALTER TABLE `closet_items`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `comments`
+--
+ALTER TABLE `comments`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `complaints_post`
+--
+ALTER TABLE `complaints_post`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `complaints_user`
+--
+ALTER TABLE `complaints_user`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `garage_sales`
+--
+ALTER TABLE `garage_sales`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -375,9 +496,27 @@ ALTER TABLE `item_categories`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `networks`
+--
+ALTER TABLE `networks`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `ootd_categories`
 --
 ALTER TABLE `ootd_categories`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `posts`
+--
+ALTER TABLE `posts`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `reactions`
+--
+ALTER TABLE `reactions`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -388,7 +527,12 @@ ALTER TABLE `ootd_categories`
 -- AUTO_INCREMENT for table `chasers`
 --
 ALTER TABLE `chasers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `chases`
+--
+ALTER TABLE `chases`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `closets`
 --
@@ -400,10 +544,30 @@ ALTER TABLE `closets`
 ALTER TABLE `closet_items`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
+-- AUTO_INCREMENT for table `comments`
+--
+ALTER TABLE `comments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `complaints_post`
+--
+ALTER TABLE `complaints_post`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `complaints_user`
+--
+ALTER TABLE `complaints_user`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `garage_sales`
+--
+ALTER TABLE `garage_sales`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `item_brands`
 --
@@ -415,10 +579,25 @@ ALTER TABLE `item_brands`
 ALTER TABLE `item_categories`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 --
+-- AUTO_INCREMENT for table `networks`
+--
+ALTER TABLE `networks`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT for table `ootd_categories`
 --
 ALTER TABLE `ootd_categories`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+--
+-- AUTO_INCREMENT for table `posts`
+--
+ALTER TABLE `posts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `reactions`
+--
+ALTER TABLE `reactions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

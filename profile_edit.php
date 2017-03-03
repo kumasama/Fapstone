@@ -1,3 +1,38 @@
+<?php
+	session_start();
+
+	if(!isset($_SESSION['islogin'])) {
+		header('Location: login.php');
+		exit();
+	}
+	require_once('backend/functions.php');
+
+	$id = $_SESSION['chaser_id'];
+
+	$chaser = fetchById($id, 'chasers');
+
+	if(count($_POST)>0) {
+		$data = array(
+			'last_name' => $_POST['last_name'],
+			'first_name' => $_POST['first_name'],
+			'gender' => $_POST['gender'],
+			'bio' => $_POST['bio']
+		);
+		if(count($_FILES)>0) {
+			$f = $_FILES['imgInp'];
+	        $tmp_file = $f['tmp_name'];
+	        if($tmp_file != '' && $f['size'] > 0 ) {
+	        	$path = $name = 'uploads/'.rand(). rand().rand().strtolower($f['name']);
+	        	move_uploaded_file($tmp_file, $path);
+	        	$data['photo'] = $path;
+	        }
+		}
+		if(update($data, 'chasers', $id)) {
+			header('location: profile_edit.php');
+			exit();
+		}
+	}
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,13 +56,6 @@
 
 	<script type='text/javascript'>
 		$(document).ready(function() {
-			$(".hidden").hide();
-
-			$('.chips-placeholder').material_chip({
-			    placeholder: 'Enter a tag',
-			    secondaryPlaceholder: '+Tag',
-			 });
-
 			$('#selectIMG').click(function(){
 			     $('#imgInp').trigger('click');
 			});
@@ -66,7 +94,7 @@
 	      <div class="nav-wrapper pink darken-1">
 	        <a href="../final" class="brand-logo center"><img src="images/logo.png" alt="OOTDme" height="65" style="margin-top:-5px;"></a>
 	        <ul id="nav-mobile">
-        		<li><a href="index.php"><i class="material-icons">arrow_back</i></a></li>
+        		<li><a href="profile.php"><i class="material-icons">arrow_back</i></a></li>
       		</ul>
 	      </div>
 	    </nav>
@@ -77,10 +105,11 @@
 <div class ="card">
 	<div class="card-content black-text">
 		<div class = "col s12">
-		<form action="#" id='new_post'>
-			<img id="imgOutp" src="images/alt.png" style='width: 100%; height:200px; margin-top: 10px;'/>
-			<input type="file" name="imgInp" id='imgInp' accept="image/*" class='hidden'>
+		<form action="#" id='new_post' method='post' enctype="multipart/form-data">
+			<img id="imgOutp" src="<?php echo $chaser['photo']; ?>" style='width: 100%; height:200px; margin-top: 10px;'/>
+			<input type="file" name="imgInp" id='imgInp' accept="image/*" style='display: none;'>
 			</div>
+
 			<!-- <button class="btn waves-effect waves-light right pink lighten-3" id='selectIMG'> -->
     					<i id='selectIMG' class="material-icons center">camera_alt</i>
   			 <!-- </button> -->
@@ -90,32 +119,35 @@
 		     <div class="row">
 		    <form class="col s12">
 		      <div class="row">
-		        <div class="input-field col s12">
-		         <input id="name" type="text">
-		          <label for="name">Name</label>
+		      	<div class="input-field col s12">
+		         <input value='<?php echo $chaser['first_name']; ?>' id="first_name" name='first_name' type="text">
+		          <label for="first_name">First Name</label>
 		        </div>
 		        <div class="input-field col s12">
-		          <input id="uname" type="text">
-		          <label for="uname">Username</label>
-		        </div>
-		         <div class="input-field col s12">
-		          <input id="bday" type="date">
-		        </div>
-			  <select class="browser-default">
-			    <option value="" disabled selected>Choose your option</option>
-			    <option value="Male">MALE</option>
-			    <option value="Female">FEMALE</option>
-			  </select>
-		          <div class="input-field col s12">
-		          <input id="location" type="text">
-		          <label for="location">Location</label>
-        	</div>
-        	<div class="input-field col s12">
-				<textarea id="diary" class="materialize-textarea"></textarea>
-				<label for="diary">About Me</label>
-			</div>
-          <center><a class="waves-effect waves-light btn pink lighten-4"><i class="material-icons left">done_all</i>Submit</a></center>
+		         <input value='<?php echo $chaser['last_name']; ?>' id="last_name" name='last_name' type="text">
+		          <label for="last_name">Last Name</label>
+		        </div> 
+		       	<div class='col s12'>
+			      	<select id='gender' class="browser-default" name='gender'>
+					    <option value="" disabled selected>Select gender:</option>
+					    	<option value="Male" <?php if($chaser['gender'] == 'Male') echo 'selected'; ?>>
+					    		MALE
+					    	</option>
+					    	<option value="Female" <?php if($chaser['gender'] == 'Female') echo 'selected'; ?>>
+					    		FEMALE
+					    	</option>
+					 </select>
+			     </div>
+	        	<div class="input-field col s12">
+					<textarea name='bio' id="bio" class="materialize-textarea"><?php echo $chaser['bio']; ?></textarea>
+					<label for="bio">About Me</label>
+				</div>
 		</form>
+		 <center>
+		 	<a id='form_submit' class="waves-effect waves-light btn pink lighten-4">
+		 		<i class="material-icons left">done_all</i>Save
+		 	</a>
+		 </center>
 	</div>
 </div>
  

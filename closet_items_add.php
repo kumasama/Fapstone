@@ -79,7 +79,7 @@
   <!-- Navigation Bar -->
    <div class="navbar-fixed"'>
       <nav class='nav'>
-        <div class="nav-wrapper red lighten-1">
+        <div class="nav-wrapper pink darken-1">
           <ul id="nav-mobile">
             <a href="#" class="brand-logo center"><img src="images/closet.png" alt="OOTDme" height="65" style="margin-top:-5px;">
             <li>

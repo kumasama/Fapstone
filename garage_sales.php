@@ -60,7 +60,7 @@
    <div class="navbar-fixed">
       <nav>
         <div class="nav-wrapper pink darken-1">
-          <a href="#" class="brand-logo center"><img src="images/closet.png" alt="OOTDme" height="65" style="margin-top:-5px;"></a>
+          <a href="#" class="brand-logo center"><img src="images/garage.png" alt="OOTDme" height="65" style="margin-top:-5px;"></a>
           <ul id="nav-mobile">
             <li><a href="index.php"><i class="material-icons">arrow_back</i></a></li>
           </ul>
@@ -70,25 +70,30 @@
    <!-- Navigation Bar -->
 <div class="row">
     <?php
-      $closets = fetchClosets($id);
-      if(count($closets)>0) {
+      $garage_sales = fetchGarageSales($id);
+      if(count($garage_sales)>0) {
     ?>  
-          <?php foreach($closets as $closet) { ?>
+          <?php foreach($garage_sales as $event) { ?>
           <div class="col s12">
             <div class="card">  
-              <a class='dropdown-button right' href='#' data-activates='dropdown<?php echo $closet['id']; ?>'><br />
+              <a class='dropdown-button right' href='#' data-activates='dropdown<?php echo $event['id']; ?>'><br />
               <i class="material-icons">more_vert</i>
               </a>
-              <ul id='dropdown<?php echo $closet['id']; ?>' class='dropdown-content'>
-              <li><a href="closet_edit.php?closet_id=<?php echo $closet['id']; ?>"><span class='pink-text darken-1'>Edit</span></a></li>
-              <li><a href="backend/delete_closet.php?closet_id=<?php echo $closet['id']; ?>"><span class='pink-text darken-1'>Delete</span></a></li>
+              <ul id='dropdown<?php echo $event['id']; ?>' class='dropdown-content'>
+              <li><a href="backend/delete_garage.php?garage_id=<?php echo $event['id']; ?>"><span class='pink-text darken-1'>Delete</span></a></li>
               </ul>    
               <div class='card-content'>
-              <a href='closet_items.php?closet_id=<?php echo $closet['id']; ?>'>
-              <span class="card-title black-text"><b><?php echo $closet['name']; ?></b></span>
+              <a href='garage_sale_items.php?garage_id=<?php echo $event['id']; ?>'>
+              <span class="card-title black-text"><b><?php echo $event['name']; ?></b></span>
               </a>
               <p class='flow-text black-text'>
-              <?php echo $closet['description']; ?>
+                <?php
+                  $start = date('F j' , strtotime($event['start_date'])); 
+                  $end = date('F j' , strtotime($event['end_date'])); 
+                  echo $start . ' - ' . $end . '<br />';
+                  echo $event['start_time'] . ' - ' . $event['end_time'] . '<br />';
+                  echo $event['place'];
+                ?>
               </p>
               </div>
             </div>
@@ -97,7 +102,7 @@
     <?php } ?>
 </div>
 <div class="fixed-action-btn">
-<a href='closet_add.php'class="btn-floating btn-large red">
+<a href='garage_sales_add.php'class="btn-floating btn-large red">
 <i class="large material-icons">add</i>
 </a>
 </div>

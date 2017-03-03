@@ -62,7 +62,15 @@
   <script type='text/javascript'>
     $(document).ready(function() {
 
-      $("input").attr("autocomplete","off");}
+      $("input").attr("autocomplete","off");
+
+      $('#closet_name').keydown(function(event){
+        if(event.keyCode == 13) {
+          event.preventDefault();
+          $('#closet_descr').focus();
+          return false;
+        }
+      });
         
       $('#form_submit').click(function() {
       	let n = $('#closet_name').val();
@@ -73,15 +81,7 @@
         }
       });
 
-      $('#new_post').submit(function(e) {
-        let n = $('#closet_name').val();
-        let m = $('#closet_descr').val();
-        if(n!='' && m!='') {
-          $(this).submit();
-        } else {
-          e.preventDefualt();
-        }
-      });
+
 
     });
   </script>

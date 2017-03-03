@@ -21,8 +21,7 @@
        <li><a href="profile.php"><i class="material-icons">person</i>Profile</a></li>
        <li><a href="items.php"><i class="material-icons">loyalty</i>Items</a></li>
        <li><a href="closets.php"><i class="material-icons">wc</i>Closet</a></li>
-        <li><a href="garage.php"><i class="material-icons">style</i>Garage</a></li>
-        <li><a href="notifs.php"><i class="material-icons">notifications</i>Notifications</a></li>
+        <li><a href="garage_sales.php"><i class="material-icons">style</i>Garage</a></li>
         <li><a href="settings.php"><i class="material-icons">settings</i>Settings</a></li>
         <li><a href="logout.php"><i class="material-icons">forward</i>Logout</a></li>
     </ul>

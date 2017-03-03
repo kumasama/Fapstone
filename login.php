@@ -54,7 +54,7 @@ body {
   <script type="text/javascript" src="materialize/js/materialize.min.js"></script>
 <script>
 $(document).ready(function() {
-  $("input").attr("autocomplete","off");}
+  $("input").attr("autocomplete","off");
 });
 </script>
 <div class='row'>

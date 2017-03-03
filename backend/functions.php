@@ -21,6 +21,21 @@
 		return $exist_status;
 	}
 
+	function update($arr, $table_name, $id) {
+		try {
+			$data = splitArr($arr);
+			$db = PDO_Connection();
+			$sql = updateSQL($data[0], $table_name) . ' where id=?'; 
+			$data[1][] = $id;
+			$stmt = $db->prepare($sql);
+			$success = $stmt->execute($data[1]);
+			$db = null;
+		}catch(PDOException $e) {
+			echo $e->getMessage();
+		}
+		return $success;
+	}
+
 	function insert($arr, $table_name) {
 		try {
 			$data = splitArr($arr);
@@ -133,7 +148,6 @@
 	function fetchClosetItems_search($closet_id, $search) {
 		try {
 			$db = PDO_Connection();
-			// $sql = "select * from items where ((name like '%" . $search . "%') or (type like '%" . $search . "%') or (brand like '%" . $search . "%')) and (id in(select item_id from closet_items where closet_id=?))";
 			$sql = "select * from closet_items where closet_id=? and (item_id in(select id from items where ((name like '%" . $search . "%') or (type like '%" . $search . "%') or (brand like '%" . $search . "%'))))";
 			$stmt = $db->prepare($sql);
 			$stmt->execute(array($closet_id));
@@ -145,6 +159,23 @@
 		return $result;
 	}
 
+	function have_ClosetItems($chaser_id) {
+		$status = false;
+		try {
+			$db = PDO_Connection();
+			$sql = 'select count(*) from items where chaser_id=? and id in (select item_id from closet_items)';
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array($chaser_id));
+			$result = $stmt->fetch();
+			if($result[0] > 0) {
+				$status = true;
+			}
+			$db = null;
+		} catch(PDOException $e) {
+			$e->getMessage();
+		}
+		return $status;
+	}
 
 	function fetchItems_search($id, $search) {
 		try {
@@ -206,6 +237,63 @@
 
 	}
 
+	function fetchGarageSales($chaser_id) {
+		try {
+			$db = PDO_Connection();
+			$sql = 'select * from garage_sales where chaser_id=?';
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array($chaser_id));
+			$result = $stmt->fetchAll();
+			$db = null;
+		} catch(PDOException $e) {
+			echo $e->getMessage();
+		}
+		return $result;
+	}
+
+	function fetch_ootds($id) {
+		try {
+			$db = PDO_Connection();
+			$sql = 'select * from posts where chaser_id=? order by date_time desc';
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array($id));
+			$result = $stmt->fetchAll();
+			$db = null;
+		}catch(PDOException $e) {
+			echo $e->getMessage();
+		}
+		return $result;
+	}
+
+	function fetch_Posts($id) {
+		try {
+			$db = PDO_Connection();
+			$sql = 'select * from posts where chaser_id=? or chaser_id in (select follow_id from networks where chaser_id=?) order by date_time desc';
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array($id, $id));
+			$result = $stmt->fetchAll();
+			$db = null;
+		}catch(PDOException $e) {
+			echo $e->getMessage();
+		}
+		return $result;
+	}
+
+	function fetch_chases($id) {
+		try {
+			$db = PDO_Connection();
+			$sql = 'select * from posts where id in (select post_id from chases where chaser_id=?) order by date_time desc';
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array($id));
+			$result = $stmt->fetchAll();
+			$db = null;
+		}catch(PDOException $e) {
+			echo $e->getMessage();
+		}
+		return $result;
+	}
+
+
 	function if_Follower($id, $chaser_id) {
       $follower = false;
       try {
@@ -221,6 +309,49 @@
           echo $e->getMessage();
       }
       return $follower;
+	}
+
+	function count_chases($post_id) {
+		try {
+			$db = PDO_Connection();
+			$sql = 'select count(*) from chases where post_id=?';
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array($post_id));
+			$result = $stmt->fetch();
+			$db = null;
+		} catch(PDOException $e) {
+			echo $e->getMessage();
+		}
+		return $result[0];
+	}
+
+	function count_posts($id) {
+		try {
+			$db = PDO_Connection();
+			$sql = 'select count(*) from posts where chaser_id=?';
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array($id));
+			$result = $stmt->fetch();
+			$db = null;
+		} catch(PDOException $e) {
+			echo $e->getMessage();
+		}
+		return $result[0];
+	}
+
+
+	function count_reactions($post_id, $type) {
+		try {
+			$db = PDO_Connection();
+			$sql = 'select count(*) from reactions where type=? and post_id=?';
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array($type, $post_id));
+			$result = $stmt->fetch();
+			$db = null;
+		} catch(PDOException $e) {
+			echo $e->getMessage();
+		}
+		return $result[0];
 	}
 
 	function count_followers($id) {
@@ -251,6 +382,30 @@
 		return $result[0];
 	}
 
+	function transferable_closets($closet_id, $id) {
+		try {
+			$db = PDO_Connection();
+			$sql = 'select * from closets where chaser_id=? and not id=?';
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array($id, $closet_id));
+			$result = $stmt->fetchAll();
+			$db = null;
+		} catch(PDOException $e) {
+			echo $e->getMessage();
+		}
+		return $result;
+	}
+
+	function can_transfer($closet_id, $chaser_id) {
+		$closet_items = fetchClosetItems($closet_id);
+		if(!count($closet_items) > 0)
+			return false;
+		$transferable_closets = transferable_closets($closet_id, $chaser_id);
+		if(!count($transferable_closets) > 0)
+			return false;
+		return true;
+	}
+
 	function insertSQL($arr, $table_name) {
 		$sql = 'INSERT INTO ' . $table_name . ' (';
 		for($i = 0; $i<count($arr); $i++)  {
@@ -268,18 +423,4 @@
 	}
 
 	//SQL Commands
-
-	function getPK($table_name) {
-			try {
-				$db = PDO_Connection();
-				$sql = 'SHOW COLUMNS FROM ' . $table_name;
-				$stmt = $db->prepare($sql);
-				$stmt->execute();
-				$result = $stmt->fetch();
-				$db = null;
-			} catch(PDOException $e) {
-				echo $e->getMessage();
-			}
-			return $result[0];
-		}
 ?>

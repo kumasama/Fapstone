@@ -17,6 +17,7 @@
   } else {
       $closet_id = $_GET['closet_id'];
       $closet = fetchById($closet_id, 'closets');
+      $can_transfer = can_transfer($closet_id, $id);
   }
 
   function hide() {
@@ -62,6 +63,22 @@
             $('#main-content').show();
             $('#search').val('');
         });
+
+        var len = 0;
+        $("input[type='checkbox']").change(function() {
+            len = $('input[type="checkbox"]:checked').length;
+            if(len > 0 ) {
+                $('#btn_transfer').show();
+            } else {
+                $('#btn_transfer').hide();
+            }
+        }); 
+
+        $('#btn_transfer').on('click', function() {
+            setTimeout(function() {
+              $('#form_transfer').submit();
+            }, 500);
+        });
     });
 
     function openModal(path) {
@@ -69,6 +86,9 @@
         $('#modal1').modal('open');
     }
 
+    function transfer_modal() {
+      $('#modal_transfer').modal('open');
+    }
 
   </script>
 
@@ -79,9 +99,10 @@
   <!-- Navigation Bar -->
    <div class="navbar-fixed"'>
       <nav class='nav'>
-        <div class="nav-wrapper red lighten-1">
+        <div class="nav-wrapper pink darken-1">
           <ul id="nav-mobile">
-            <a href="#" class="brand-logo center"><img src="images/closet.png" alt="OOTDme" height="65" style="margin-top:-5px;">
+            <span href="#" class="brand-logo center"><img src="images/closet.png" alt="OOTDme" height="65" style="margin-top:-5px;">
+            </span>
             <li>
               <a href="closets.php">
                 <i class="material-icons">arrow_back</i>
@@ -94,7 +115,7 @@
    </div>
     <div id='search_bar' class="navbar-fixed" >
       <nav>
-        <div class="nav-wrapper">
+        <div class="nav-wrapper pink darken-1">
           <form>
             <div class="input-field">
               <input name='closet_id' type='hidden' value='<?php echo $closet_id; ?>'/>
@@ -145,6 +166,13 @@
    <div class="row" id='main-content' <?php if($search != '') hide();?> >      
       <blockquote>
         <b><?php echo $closet['name']; ?></b>
+        <?php 
+          if($can_transfer) {
+        ?>
+         <a onclick='transfer_modal()' class='right' href='#' style='padding-right: 15px;'>
+          <span class='pink-text darken-1'><i class="material-icons">move_to_inbox</i></span>  
+         </a>
+         <?php } ?>
       </blockquote>
    <?php 
         $closet_items = fetchClosetItems($closet_id);
@@ -176,7 +204,6 @@
   </ul>
   <br /><br /><br />
   <?php } ?>
-    </div>
   <!-- Main Content -->
    <!-- Modal Structure -->
     <!-- Modal Trigger -->
@@ -185,7 +212,44 @@
     <div class="modal-content">
       <img id='modalImg' src='images/c1.jpg' class="responsive-img">
     </div>
-  </div>   
+  </div> 
+  <div id="modal_transfer" class="modal modal-fixed-footer">
+    <form id='form_transfer' action='backend/item_transfer.php' method='post'>
+    <input type='hidden' name='from_closet_id' value='<?php echo $closet_id; ?>' />
+    <div class="modal-content">
+<?php
+if($can_transfer) {
+?>
+      <p>
+        <label>Transfer items to closet</label>
+        <select class='browser-default' name='to_closet_id'>
+<?php
+    $closets = transferable_closets($closet_id, $id);
+    foreach($closets as $closet) {
+        echo '<option value='. $closet['id'] .'>';
+        echo $closet['name'];
+        echo '<option>';
+    }
+?>
+        </select>
+      </p>
+      <?php 
+        foreach($closet_items as $closet_item) {
+          $item = fetchById($closet_item['item_id'], 'items');
+      ?>
+      <p>
+        <input class="filled-in" type="checkbox" value='<?php echo $item['id']; ?>' name='items[]' id="item<?php echo $item['id']; ?>" />
+        <label for="item<?php echo $item['id']; ?>"><?php echo $item['name']; ?></label>
+      </p>
+  <?php } ?>
+<?php } ?>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+      <a id='btn_transfer' style='display: none;' href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Transfer</a>
+    </div>
+    </form>
+  </div>  
     <div class="fixed-action-btn">
     <a href='closet_items_add.php?closet_id=<?php echo $closet_id; ?>'class="btn-floating btn-large red">
       <i class="large material-icons">add</i>
