@@ -159,7 +159,7 @@
 	<div class='row' id='main_content'>
  	<?php foreach($posts as $post) { ?>
  			<div class='col s12'>
- 				<div class='card grey lighten-5'>
+ 				<div class='card grey lighten-5 z-depth-4'>
 	 				<a class='dropdown-button right' href='#' data-activates='dropdown<?php echo $post['id']; ?>'>
 	 					</br><span class='pink-text darken-1'><i class="material-icons">more_vert</i></span>	
 	 				</a>
@@ -189,7 +189,7 @@
 	          				<span class='Title'>
 	          					<b><?php echo $ch['first_name'] . ' ' . $ch['last_name']; ?></b>
 	          				</span>
-	          				<p class='grey-text'>
+	          				<p class='grey-text '>
 	          					<?php echo date('F j g:i A' , strtotime($post['date_time'])); 
 	          					?>
 	          				</p>
@@ -224,7 +224,7 @@
 						}
 					?>
           			</p>
-          			<img src="<?php echo $post['photo']; ?>" alt="" class="responsive-img">
+          			<img src="<?php echo $post['photo']; ?>" alt="" class="responsive-img z-depth-1">
           			<table>
 		              <tr>	
 		              	 <td class='center'>

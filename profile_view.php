@@ -13,6 +13,10 @@
   if(isset($_GET['chaser_id']) && $_GET['chaser_id'] !== '') {
       $chaser_id = $_GET['chaser_id'];
       $chaser = fetchById($chaser_id, 'chasers');
+      if($chaser_id == $id) {
+          header('location: profile.php');
+          exit();
+      }
   } else {
       header('Location: index.php');
       exit();
@@ -155,8 +159,6 @@
               <li class='divider'></li>
               <li><a href="#!"><span class='white-text darken-1'>Report</span></a></li>
               <li class='divider'></li>
-              <li><a href="#!"><span class='white-text darken-1'>Block</span></a></li>
-              <li class='divider'></li>
             </ul>
           </ul>
         </div>
@@ -179,13 +181,12 @@
   </p>
   <p color="whitesmoke" size="40px">
       <a href ="#" class="white-text"><?php echo count_posts($chaser_id); ?> OOTDS</a> | 
-      <a href ="#" class="white-text"><?php echo count_followers($chaser_id); ?> Followers</a> | 
-      <a href = "#" class="white-text"><?php echo count_following($chaser_id); ?> Following</a> | 
+      <a href ="#" class="white-text"><?php echo count_followers($chaser_id); ?> Chasers</a>
   </p>
   <?php if($following) { ?>
-    <a href='<?php generateURL2($id, $chaser_id); ?>' class="btn waves-effect waves-light pink accent-4 white-text">Unfollow</a>
+    <a href='<?php generateURL2($id, $chaser_id); ?>' class="btn waves-effect waves-light pink accent-4 white-text">Unchase</a>
   <?php } else {?>
-    <a href='<?php generateURL($id, $chaser_id); ?>' class="btn waves-effect waves-light pink accent-4 white-text">Follow</a>
+    <a href='<?php generateURL($id, $chaser_id); ?>' class="btn waves-effect waves-light pink accent-4 white-text">Chase</a>
   <?php } ?>
   </center>
   </br>
@@ -209,24 +210,42 @@
     ?>  
           <?php foreach($garage_sales as $event) { ?>
           <div class="col s12">
-            <div class="card">  
-              <a class='dropdown-button right' href='#' data-activates='dropdown<?php echo $event['id']; ?>'><br />
-              <i class="material-icons">more_vert</i>
-              </a>
+            <div class="card <?php if_joint_garage($event['id']); ?>">  
+              <?php if($event['chaser_id'] == $id) { ?>
+                <a class='dropdown-button right' href='#' data-activates='dropdown<?php echo $event['id']; ?>'><br />
+                <span class='pink-text darken-1'>
+                  <i class="material-icons">more_vert</i>
+                </span>
+                </a>
+              <?php } ?>
               <ul id='dropdown<?php echo $event['id']; ?>' class='dropdown-content'>
-              <li><a href="backend/delete_garage.php?garage_id=<?php echo $event['id']; ?>"><span class='pink-text darken-1'>Delete</span></a></li>
+                  <li><a href="garage_edit.php?garage_id=<?php echo $event['id']; ?>">
+                      <span class='pink-text darken-1'>Edit
+                      </span>
+                  </a></li>
+                  <li><a href="backend/delete_garage.php?garage_id=<?php echo $event['id']; ?>">
+                      <span class='pink-text darken-1'>Delete
+                      </span>
+                  </a></li>
               </ul>    
-              <div class='card-content'>
-              <a href='garage_sale_items.php?garage_id=<?php echo $event['id']; ?>'>
-              <span class="card-title black-text"><b><?php echo $event['name']; ?></b></span>
-              </a>
+              <div class='card-content z-depth-3'>
+            
               <p class='flow-text black-text'>
-                <?php
-                  $start = date('F j' , strtotime($event['start_date'])); 
-                  $end = date('F j' , strtotime($event['end_date'])); 
-                  echo $start . ' - ' . $end . '<br />';
-                  echo $event['start_time'] . ' - ' . $event['end_time'] . '<br />';
-                  echo $event['place'];
+                <strong>
+                <?php 
+                          $start_date = date('F j' , strtotime($event['start_date'])); 
+                          $end_date = date('F j' , strtotime($event['end_date']));    
+                ?>
+                <a href='garage_sale_items.php?garage_id=<?php echo $event['id']; ?>'>
+                <span class='black-text'>
+                  <?php echo $start_date . ' - ' . $end_date; ?>
+                </span>
+                </a>
+                </strong>
+                <?php 
+                    echo '<br />' . $event['start_time'] . ' - ' . $event['end_time'] . '<br />';
+                    echo $event['place'] . '<br /><br />'; 
+                    echo $event['description'];
                 ?>
               </p>
               </div>

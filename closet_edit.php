@@ -8,18 +8,26 @@
 
   require_once('backend/functions.php');
 
+  if(isset($_GET['closet_id'])) {
+      $closet_id = $_GET['closet_id'];
+  } else {
+      header('location: closets.php');
+      exit();
+  }
+
+  $closet = fetchById($closet_id, 'closets');
+
   $id = $_SESSION['chaser_id'];
 
   if(count($_POST)>0) {
   		$closet_info = array(
   			'name' => $_POST['closet_name'],
-  			'description' => $_POST['closet_descr'],
-  			'chaser_id' => $id
+  			'description' => $_POST['closet_descr']
   		);
-  		if(insert($closet_info, 'closets')) {
-  			header('Location:closets.php');
+      if(update($closet_info, 'closets', $closet['id'])) {
+        header('location: closets.php');
         exit();
-  		}
+      }
   }
 
 ?>
@@ -94,9 +102,9 @@
    <div class="navbar-fixed">
       <nav>
         <div class="nav-wrapper pink darken-1">
-          <a href="closets.php" class="brand-logo center"><img src="images/closet.png" alt="OOTDme" height="65" style="margin-top:-5px;"></a>
+          <a href="#" class="brand-logo center"><img src="images/closet.png" alt="OOTDme" height="65" style="margin-top:-5px;"></a>
           <ul id="nav-mobile">
-            <li><a href="index.php"><i class="material-icons">arrow_back</i></a></li>
+            <li><a href="closets.php"><i class="material-icons">arrow_back</i></a></li>
           </ul>
         </div>
       </nav>
@@ -116,15 +124,15 @@
 <!-- <button class="btn waves-effect waves-light right pink lighten-3" id='selectIMG'> -->
 <!-- </button> -->
 <div class="input-field col s12">
-<input id="closet_name" name='closet_name' type="text">
+<input id="closet_name" name='closet_name' type="text" value='<?php echo $closet['name']; ?>'>
 <label for="closet_name">Closet Name</label>
 </div>
 <div class="input-field col s12">
-<textarea id="closet_descr" name='closet_descr' class="materialize-textarea"></textarea>
+<textarea id="closet_descr" name='closet_descr' class="materialize-textarea"><?php echo $closet['description']; ?></textarea>
 <label for="closet_descr">Closet Description</label>
 </div>
 </form>
-<center> <button class="btn waves-effect waves-light red darken-2" id='form_submit'>Add </button></center>
+<center> <button class="btn waves-effect waves-light pink lighten-3" id='form_submit'>Add </button></center>
 </div>
 </div>
 </div>

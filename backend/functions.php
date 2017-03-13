@@ -177,6 +177,24 @@
 		return $status;
 	}
 
+	function have_ClosetItems_garage($chaser_id) {
+		$status = false;
+		try {
+			$db = PDO_Connection();
+			$sql = 'select count(*) from items where chaser_id=? and id in (select item_id from closet_items) and id not in(select item_id from garage_items)';
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array($chaser_id));
+			$result = $stmt->fetch();
+			if($result[0] > 0) {
+				$status = true;
+			}
+			$db = null;
+		} catch(PDOException $e) {
+			$e->getMessage();
+		}
+		return $status;
+	}
+
 	function fetchItems_search($id, $search) {
 		try {
 			$db = PDO_Connection();
@@ -233,16 +251,54 @@
 		return $result;
 	}	
 
-	function fetchGarageItems() {
+	function fetchClosetItems_garage($id) {
+		try {
+			$db = PDO_Connection();
+			$sql = 'select * from closet_items where closet_id=? and item_id not in (select item_id from garage_items)';
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array($id));
+			$result = $stmt->fetchAll();
+			$db = null;
+		} catch(PDOException $e) {
+			echo $e->getMessage();
+		}
+		return $result;
+	}	
 
+	function fetchGarageItems($garage_id) {
+		try {
+			$db = PDO_Connection();
+			$sql = 'select * from garage_items where garage_id=?';
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array($garage_id));
+			$result = $stmt->fetchAll();
+			$db = null;
+		} catch(PDOException $e) {
+			echo $e->getMessage();
+		}
+		return $result;
+	}
+
+	function fetchGarageChasers($garage_id) {
+		try {
+			$db = PDO_Connection();
+			$sql = 'select * from garage_chasers where garage_id=?';
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array($garage_id));
+			$result = $stmt->fetchAll();
+			$db = null;
+		} catch(PDOException $e) {
+			echo $e->getMessage();
+		}
+		return $result;
 	}
 
 	function fetchGarageSales($chaser_id) {
 		try {
 			$db = PDO_Connection();
-			$sql = 'select * from garage_sales where chaser_id=?';
+			$sql = 'select * from garage_sales where chaser_id=? or id in (select garage_id from garage_chasers where chaser_id=?)';
 			$stmt = $db->prepare($sql);
-			$stmt->execute(array($chaser_id));
+			$stmt->execute(array($chaser_id, $chaser_id));
 			$result = $stmt->fetchAll();
 			$db = null;
 		} catch(PDOException $e) {
@@ -382,6 +438,73 @@
 		return $result[0];
 	}
 
+	function get_invitations($chaser_id) {
+		try {
+			$db = PDO_Connection();
+			$sql = 'select * from garage_invitations where chaser_id=?';
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array($chaser_id));
+			$result = $stmt->fetchAll();
+			$db = null;
+		} catch(PDOException $e) {
+			echo $e->getMessage();
+		}
+		return $result;
+	}
+
+	function can_invites($chaser_id, $garage_id) {
+		$chasers = fetchAll_sort('chasers', 'first_name', 'asc');
+		$result = array();
+		foreach($chasers as $chaser) {
+			if(if_Follower($chaser_id, $chaser['id'])) {
+				if(if_Follower($chaser['id'], $chaser_id)) {
+					if(!invited($chaser['id'], $garage_id)) {
+						if(!joined($chaser['id'], $garage_id)) {
+							$result[] = $chaser;
+						}
+					}
+				}
+			}
+		}
+		return $result;
+	}
+
+	function invited($chaser_id, $garage_id) {
+		$invited = false;
+		try {
+			$db = PDO_Connection();
+			$sql = 'select count(*) from garage_invitations where chaser_id=? and garage_id=?';
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array($chaser_id, $garage_id));
+			$result = $stmt->fetch();
+			if($result[0] > 0 ) {
+				$invited = true;
+			}
+			$db = null;
+		} catch(PDOException $e) {
+			echo $e->getMessage();
+		}
+		return $invited;
+	}
+
+	function joined($chaser_id, $garage_id) {
+		$joined = false;
+		try {
+			$db = PDO_Connection();
+			$sql = 'select count(*) from garage_chasers where chaser_id=? and garage_id=?';
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array($chaser_id, $garage_id));
+			$result = $stmt->fetch();
+			if($result[0] > 0 ) {
+				$joined = true;
+			}
+			$db = null;
+		} catch(PDOException $e) {
+			echo $e->getMessage();
+		}	
+		return $joined;
+	}
+
 	function transferable_closets($closet_id, $id) {
 		try {
 			$db = PDO_Connection();
@@ -404,6 +527,30 @@
 		if(!count($transferable_closets) > 0)
 			return false;
 		return true;
+	}
+
+	function if_joint_garage($garage_id) {
+      if(joint_garage($garage_id)) {
+          echo 'grey ligten-3';
+      }
+  	}
+
+	function joint_garage($garage_id) { 
+		$joint = false;
+		try {
+			$db = PDO_Connection();
+			$sql = 'select count(*) from garage_chasers where garage_id=?';
+			$stmt = $db->prepare($sql);
+			$stmt->execute(array($garage_id));
+			$result = $stmt->fetch();
+			if($result[0]>0) {
+				$joint = true;
+			}
+			$db = null;
+		} catch(PDOException $e) {
+		  	echo $e->getMessage();
+		}
+			return $joint;
 	}
 
 	function insertSQL($arr, $table_name) {

@@ -13,13 +13,12 @@ $id = $_SESSION['chaser_id'];
 if(count($_POST) > 0 ){
 	$data = $_POST;
 	$data['chaser_id'] = $id;
-	if($data['items'] != '') {
-		if(insert($data, 'garage_sales')) {
-			header('location: garage_sales.php');
-			exit();
-		}
+	print_r($data);
+	if(insert($data, 'garage_sales')) {
+		header('location: garage_sales.php');
+		exit();
 	} else {
-		header('location: garage_sales.add.php');
+		header('location: garage_sales_add.php');
 		exit();
 	}
 }
@@ -50,6 +49,7 @@ $have_closet_items = have_ClosetItems($id);
 
 	<script type='text/javascript'>
 		$(document).ready(function() {
+
 			$('#form_submit').click(function() {
 				$('#new_post').submit();
 			});
@@ -59,8 +59,13 @@ $have_closet_items = have_ClosetItems($id);
             $('.datepicker').pickadate({
 	          selectMonths: true, // Creates a dropdown to control month
 	          selectYears: 30,// Creates a dropdown of 15 years to control year
-	          min: new Date(2017,3,1),
+	          min: new Date(2017,2,6),
 	          max: new Date(2018,1,31)
+	        });
+
+	        $('#selected_items').focus(function() {
+	        	$(this).blur();
+	        	$('#modal_items').modal('open');
 	        });
 
 	        function dateStringify(dateString) {
@@ -85,6 +90,16 @@ $have_closet_items = have_ClosetItems($id);
 				  items = $(this).val();
 				  $('#items').val(items);
 			});
+
+			$('.modal').modal({
+	            dismissible: true, // Modal can be dismissed by clicking outside of the modal
+	            opacity: .6, // Opacity of modal background
+	            inDuration: 300, // Transition in duration
+	            outDuration: 200, // Transition out duration
+	            startingTop: '4%', // Starting top style attribute
+	            endingTop: '10%', // Ending top style attribute
+	        });
+
 		});
 	</script>
 
@@ -97,7 +112,7 @@ $have_closet_items = have_ClosetItems($id);
 	 <div class="navbar-fixed">
 	    <nav>
 	      <div class="nav-wrapper pink darken-1">
-	        <a href="#" class="brand-logo center"><img src="images/garage.png" alt="OOTDme" height="65" style="margin-top:-5px;"></a>
+	        <a href="#" class="brand-logo center"><img src="images/logo.png" alt="OOTDme" height="65" style="margin-top:-5px;"></a>
 	        <ul id="nav-mobile">
         		<li><a href="garage_sales.php"><i class="material-icons">arrow_back</i></a></li>
       		</ul>
@@ -107,28 +122,28 @@ $have_closet_items = have_ClosetItems($id);
 	 <!-- Navigation Bar -->
 
 	 <!-- Content Area -->
-<div class ="card">
+<div class ="card z-depth-4">
 <div class = "card-title">
 	<div class="card-content black-text">
 		<div class="input-field col s12">
-		     <div class="row">
+		    <div class="row">
+		    <blockquote>
+		    	<h5>
+		    		Pre-Loved Item Sale Information
+		    	</h5>
+		    </blockquote>
 		    <form class="col s12" method='post' id='new_post'>
 		      <input type='hidden' id='start_date' name='start_date' />
-		      <input type='hidden' id='end_date' name='end_date' />
-		      <input type='hidden' id='items' name='items'>
+		      <input type='hidden' id='end_date' name='end_date'/>
 		      <div class="row">
-		        <div class="input-field col s12">
-		         <input id="name" name='name' type="text" class="validate">
-		          <label for="name">Garage Sale Name</label>
- 		        </div>
 		         <div class="input-field col s12">
                     <input type="date" id='select_start_date' class="datepicker">
-                    <label>Date Start</label>
-                   </div>
-				    <div class="input-field col s12">
+                    <label>Start Date</label>
+                 </div>
+                 <div class="input-field col s12">
                     <input type="date" id='select_end_date' class="datepicker">
-                    <label>Date End</label>
-                   </div>
+                    <label>End Date</label>
+                 </div>
 			     <div class="input-field col s12">
 		          <input name='start_time' type="text" class="validate">
 		          <label for="timestart">Time Start</label>
@@ -137,42 +152,18 @@ $have_closet_items = have_ClosetItems($id);
 				   <input name='end_time' id="timeend" type="text" class="validate">
 				   <label for="timeend">Time End</label>
 		        </div>
-		        <?php 
-				if($have_closet_items) {
-			?>
-					<div class='col s12'>
-					  <select class="browser-default" id='select_items' multiple>
-					  <?php 
-					  		$closets = fetchClosets($id);
-					  		foreach($closets as $closet) {
-					  			$closet_items = fetchClosetItems($closet['id']);
-					  			if(count($closet_items) > 0 ) {
-					  				echo '<optgroup label="' . $closet['name'] .'">';
-						  			foreach($closet_items as $closet_item) {
-						  				$item = fetchById($closet_item['item_id'], 'items');
-						  				echo '<option value="' . $item['id'] . '"><b>' . $item['name'] . '</b></option>';
-						  			}
-						  			echo '<optgroup>';
-					  			}
-					  		}
-					  ?>
-					  </select>
-					</div>
-			<?php } else { ?>
-			<div class='col s12'>
-				  <select class="browser-default">
-			        <option disabled>You don't have closet items!</option>
-				  </select>
-			</div>
-			<?php } ?>
-        	     <div class="input-field col s12">
-				   <input name='place' id="place" type="text" class="validate">
-				   <label for="place">Place</label>
+		        <div class="input-field col s12">
+		        	<textarea class="materialize-textarea" name='description' id='description'></textarea>
+		        	<label for='description'>Description</label>
 		        </div>
+    	     <div class="input-field col s12">
+			   <input name='place' id="place" type="text" class="validate">
+			   <label for="place">Location</label>
+	        </div>
 		</form>
 		 <center>
-		 	<a id='form_submit' href='#' class="waves-effect waves-light btn pink lighten-4">
-		 		Submit
+		 	<a id='form_submit' href='#' class="waves-effect waves-light btn red darken-2">
+		 		Add
 		 	</a>
 		 </center>
 	</div>

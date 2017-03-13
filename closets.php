@@ -77,15 +77,17 @@
           <div class="col s12">
             <div class="card">  
               <a class='dropdown-button right' href='#' data-activates='dropdown<?php echo $closet['id']; ?>'><br />
+              <span class='pink-text darken-1'>
               <i class="material-icons">more_vert</i>
+              </span>
               </a>
               <ul id='dropdown<?php echo $closet['id']; ?>' class='dropdown-content'>
               <li><a href="closet_edit.php?closet_id=<?php echo $closet['id']; ?>"><span class='pink-text darken-1'>Edit</span></a></li>
               <li><a href="backend/delete_closet.php?closet_id=<?php echo $closet['id']; ?>"><span class='pink-text darken-1'>Delete</span></a></li>
               </ul>    
-              <div class='card-content'>
+              <div class='card-content z-depth-3'>
               <a href='closet_items.php?closet_id=<?php echo $closet['id']; ?>'>
-              <span class="card-title black-text"><b><?php echo $closet['name']; ?></b></span>
+              <span style='font-style: oblique;'class="card-title black-text"><b><?php echo $closet['name']; ?></b></span>
               </a>
               <p class='flow-text black-text'>
               <?php echo $closet['description']; ?>
@@ -96,8 +98,9 @@
           <?php } ?>
     <?php } ?>
 </div>
+<br /><br /><br />
 <div class="fixed-action-btn">
-<a href='closet_add.php'class="btn-floating btn-large red">
+<a href='closet_add.php' class="btn-floating btn-large red darken-2">
 <i class="large material-icons">add</i>
 </a>
 </div>

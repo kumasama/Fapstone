@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 07, 2017 at 08:10 AM
+-- Generation Time: Mar 01, 2017 at 06:16 AM
 -- Server version: 5.7.11
 -- PHP Version: 5.6.19
 
@@ -121,54 +121,18 @@ CREATE TABLE `complaints_user` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `garage_chasers`
---
-
-CREATE TABLE `garage_chasers` (
-  `id` int(11) NOT NULL,
-  `garage_id` int(11) NOT NULL,
-  `chaser_id` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `garage_invitations`
---
-
-CREATE TABLE `garage_invitations` (
-  `id` int(11) NOT NULL,
-  `garage_id` int(11) NOT NULL,
-  `chaser_id` int(11) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `garage_items`
---
-
-CREATE TABLE `garage_items` (
-  `id` int(11) NOT NULL,
-  `garage_id` int(11) NOT NULL,
-  `item_id` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `garage_sales`
 --
 
 CREATE TABLE `garage_sales` (
   `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
   `start_date` date NOT NULL,
   `end_date` date NOT NULL,
   `start_time` varchar(63) NOT NULL,
   `end_time` varchar(63) NOT NULL,
+  `items` varchar(255) NOT NULL,
   `place` varchar(511) NOT NULL,
-  `description` varchar(255) NOT NULL,
   `chaser_id` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -182,9 +146,8 @@ CREATE TABLE `items` (
   `id` int(11) NOT NULL,
   `name` varchar(127) NOT NULL,
   `type` varchar(63) NOT NULL,
-  `brand` varchar(127) NOT NULL,
-  `size` varchar(15) NOT NULL,
-  `quantity` int(11) NOT NULL DEFAULT '1',
+  `brand` varchar(63) DEFAULT NULL,
+  `size` varchar(10) DEFAULT NULL,
   `photo` varchar(255) NOT NULL,
   `chaser_id` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -276,8 +239,8 @@ INSERT INTO `item_brands` (`id`, `name`) VALUES
 (69, '	JCrew\r\n'),
 (70, '	Jag\r\n'),
 (71, '	Jansport\r\n'),
-(72, 'Kamiseta'),
-(73, 'Keds'),
+(72, '	Kamiseta \r\n'),
+(73, '	Keds\r\n'),
 (74, '	Kenzon\r\n'),
 (75, '	Kultura Filipino\r\n'),
 (76, '	Lacoste\r\n'),
@@ -371,7 +334,7 @@ INSERT INTO `item_categories` (`id`, `name`) VALUES
 (4, 'Belt\r\n'),
 (5, 'Coat'),
 (6, 'Jacket\r\n'),
-(7, 'Sweater'),
+(7, 'Sweater\r\n'),
 (8, 'Swimwear\r\n'),
 (9, 'T-Shirt\r\n'),
 (10, 'Skirt\r\n'),
@@ -509,24 +472,6 @@ ALTER TABLE `complaints_user`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `garage_chasers`
---
-ALTER TABLE `garage_chasers`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `garage_invitations`
---
-ALTER TABLE `garage_invitations`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `garage_items`
---
-ALTER TABLE `garage_items`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `garage_sales`
 --
 ALTER TABLE `garage_sales`
@@ -612,21 +557,6 @@ ALTER TABLE `complaints_post`
 -- AUTO_INCREMENT for table `complaints_user`
 --
 ALTER TABLE `complaints_user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `garage_chasers`
---
-ALTER TABLE `garage_chasers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `garage_invitations`
---
-ALTER TABLE `garage_invitations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `garage_items`
---
-ALTER TABLE `garage_items`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `garage_sales`

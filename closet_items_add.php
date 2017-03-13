@@ -94,7 +94,7 @@
    </div>
     <div id='search_bar' class="navbar-fixed" >
       <nav>
-        <div class="nav-wrapper">
+        <div class="nav-wrapper pink darken-2">
           <form>
             <div class="input-field">
               <input name='closet_id' type='hidden' value='<?php echo $closet_id; ?>'/>
@@ -124,7 +124,8 @@
               <span class="title"><?php echo $item['name']; ?></span>
               <p><?php echo $item['brand']; ?><br>
                  <?php echo $item['type']; ?> <br>
-                 <?php echo (trim($item['size']))!=''?$item['size']:'&nbsp;';?>
+                 <?php echo (trim($item['size']))!=''?$item['size']:'&nbsp;';?> <br>
+                  Quantity: <?php echo $item['quantity']; ?>
               </p>
               <div class='secondary-content' style='margin-top: 53px;'>
                   <a onclick='openModal("<?php echo $item['photo']; ?>")'><span class='red-text text-darken-2'><i class="material-icons">zoom_in</i></span></a>&nbsp; &nbsp; &nbsp;
@@ -151,14 +152,6 @@
         if(count($items)>0) {
    ?>
    <ul class="collection">
-    <!-- <li class="collection-item avatar">
-      <img src="images/yuna.jpg" alt="" class="circle">
-      <span class="title">Title</span>
-      <p>First Line <br>
-         Second Line
-      </p>
-      <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-    </li> -->
     <?php 
  
           foreach($items as $item) {
@@ -168,7 +161,8 @@
           <span class="title"><?php echo $item['name']; ?></span>
           <p><?php echo $item['brand']; ?><br>
              <?php echo $item['type']; ?> <br>
-             <?php echo (trim($item['size']))!=''?$item['size']:'&nbsp;';?>
+             <?php echo (trim($item['size']))!=''?$item['size']:'&nbsp;';?> <br>
+             Quantity: <?php echo $item['quantity']; ?>
           </p>
           <div class='secondary-content' style='margin-top: 53px;'>
               <a onclick='openModal("<?php echo $item['photo']; ?>")'><span class='red-text text-darken-2'><i class="material-icons">zoom_in</i></span></a>&nbsp; &nbsp; &nbsp;
@@ -180,19 +174,6 @@
           </div>
         </li>
         <?php } ?>
-    <!-- <li class="collection-item avatar">
-      <i class="material-icons circle red">play_arrow</i>
-      <span class="title">Semi-Nude Blue Ripped Jeans</span>
-      <p>Brand <br>
-         Type <br>
-         Size
-      </p>
-      <div class='secondary-content' style='margin-top: 53px;'>
-          <a href="#modal1"><span class='red-text text-darken-2'><i class="material-icons">zoom_in</i></span></a>&nbsp; &nbsp; &nbsp;
-          <a href="#!"><span class='red-text text-darken-2'><i class="material-icons">mode_edit</i></span></a> &nbsp; &nbsp; &nbsp;
-          <a href="#!"><span class='red-text text-darken-2'><i class="material-icons">delete_forever</i></span></a> 
-      </div>
-    </li> -->
   </ul>
   <?php } ?>
     </div>

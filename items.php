@@ -71,7 +71,7 @@
   <!-- Navigation Bar -->
    <div class="navbar-fixed"'>
       <nav class='nav'>
-        <div class="nav-wrapper red lighten-1">
+        <div class="nav-wrapper pink darken-1">
           <a href="#" class="brand-logo center">Items</a>
           <ul id="nav-mobile">
             <li><a href="index.php"><i class="material-icons">arrow_back</i></a></li>
@@ -82,7 +82,7 @@
    </div>
     <div id='search_bar' class="navbar-fixed" >
       <nav>
-        <div class="nav-wrapper">
+        <div class="nav-wrapper pink darken-2">
           <form>
             <div class="input-field">
               <input id="search" placeholder='Search Item' name='search' value='<?php echo $search; ?>' type="search">
@@ -106,12 +106,13 @@
               <span class="title"><?php echo $item['name']; ?></span>
               <p><?php echo $item['brand']; ?><br>
                  <?php echo $item['type']; ?> <br>
-                 <?php echo (trim($item['size']))!=''?$item['size']:'&nbsp;';?>
+                 <?php echo (trim($item['size']))!=''?$item['size']:'&nbsp;';?> <br>
+                 Quantity: <?php echo $item['quantity']; ?>
               </p>
               <div class='secondary-content' style='margin-top: 53px;'>
-                  <a onclick='openModal("<?php echo $item['photo']; ?>")'><span class='red-text text-darken-2'><i class="material-icons">zoom_in</i></span></a>&nbsp; &nbsp; &nbsp;
-                  <a href="#!"><span class='red-text text-darken-2'><i class="material-icons">mode_edit</i></span></a> &nbsp; &nbsp; &nbsp;
-                  <a href="#!"><span class='red-text text-darken-2'><i class="material-icons">delete_forever</i></span></a> 
+                  <a onclick='openModal("<?php echo $item['photo']; ?>")'><span class='pink-text text-darken-2'><i class="material-icons">zoom_in</i></span></a>&nbsp; &nbsp; &nbsp;
+                  <a href="item_edit.php?item_id=<?php echo $item['id']; ?>"><span class='pink-text text-darken-2'><i class="material-icons">mode_edit</i></span></a> &nbsp; &nbsp; &nbsp;
+                  <a href="delete_item.php?item_id=<?php echo $item['id']; ?>"><span class='pink-text text-darken-2'><i class="material-icons">delete_forever</i></span></a> 
               </div>
             </li>
             <?php } ?>
@@ -132,12 +133,13 @@
           <span class="title"><?php echo $item['name']; ?></span>
           <p><?php echo $item['brand']; ?><br>
              <?php echo $item['type']; ?> <br>
-             <?php echo (trim($item['size']))!=''?$item['size']:'&nbsp;';?>
+             <?php echo (trim($item['size']))!=''?$item['size']:'&nbsp;';?> <br>
+             Quantity: <?php echo $item['quantity']; ?>
           </p>
-          <div class='secondary-content' style='margin-top: 53px;'>
-              <a onclick='openModal("<?php echo $item['photo']; ?>")'><span class='red-text text-darken-2'><i class="material-icons">zoom_in</i></span></a>&nbsp; &nbsp; &nbsp;
-              <a href="#!"><span class='red-text text-darken-2'><i class="material-icons">mode_edit</i></span></a> &nbsp; &nbsp; &nbsp;
-              <a href="delete_item.php?item_id=<?php echo $item['id']; ?>"><span class='red-text text-darken-2'><i class="material-icons">delete_forever</i></span></a> 
+          <div class='secondary-content' style='margin-top: 75px;'>
+              <a onclick='openModal("<?php echo $item['photo']; ?>")'><span class='pink-text text-darken-2'><i class="material-icons">zoom_in</i></span></a>&nbsp; &nbsp; &nbsp;
+              <a href="item_edit.php?item_id=<?php echo $item['id']; ?>"><span class='pink-text text-darken-2'><i class="material-icons">mode_edit</i></span></a> &nbsp; &nbsp; &nbsp;
+              <a href="delete_item.php?item_id=<?php echo $item['id']; ?>"><span class='pink-text text-darken-2'><i class="material-icons">delete_forever</i></span></a> 
           </div>
         </li>
         <?php } ?>
@@ -145,22 +147,13 @@
   </ul>
       <br /><br /><br />
     </div>
-  <!-- Main Content -->
-   <!-- Modal Structure -->
-    <!-- Modal Trigger -->
-  <!-- Modal Structure -->
-  <!-- <div id="modal1" class="modal transparent">
-    <div class="modal-content">
-      <img id='modalImg' src='images/c1.jpg' class="responsive-img">
-    </div>
-  </div>   -->
   <div id="modal1" class="modal transparent">
     <div class="modal-content" style='padding: 0px !important;'>
       <img id='modalImg' src='images/c1.jpg' class="responsive-img">
     </div>
   </div>   
     <div class="fixed-action-btn">
-    <a href='item_add.php'class="btn-floating btn-large red">
+    <a href='item_add.php' class="btn-floating btn-large red darken-2">
       <i class="large material-icons">add</i>
     </a>
   </div>

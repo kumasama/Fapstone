@@ -8,29 +8,38 @@
 
   require_once('backend/functions.php');
 
+  if(isset($_GET['item_id'])) {
+      $item = fetchById($_GET['item_id'], 'items');
+  } else {
+      header('location: items.php');
+  }
+
   $id = $_SESSION['chaser_id'];
 
+  if(isset($_GET['closet_id'])) {
+      $prev_url = 'closet_items.php?closet_id=' . $_GET['closet_id'];
+  } else {
+      $prev_url = 'items.php';
+  }
+
   if(count($_POST)>0) {
-      if(count($_FILES) > 0)
-      {
-        $f = $_FILES['imgInp'];
-        $tmp_file = $f['tmp_name'];
-        $path = $name = 'uploads/'.rand(). rand().rand().strtolower($f['name']);
-        move_uploaded_file($tmp_file, $path);
-        $item = array(
+        $new_item_info = array(
             'name' => $_POST['item_name'],
             'type' => $_POST['type'],
             'brand' => $_POST['brand'],
             'size' => $_POST['item_size'],
-            'quantity' => $_POST['item_qty'],
-            'photo' => $path,
-            'chaser_id' => $id
+            'quantity' => $_POST['item_qty']
         );
-        
-        if(insert($item, 'items')) {
-            header('Location:items.php');
+
+        if(update($new_item_info, 'items', $item['id'])) {
+            header('location: ' . $prev_url);
             exit();
         }
+  }
+
+  function selected($item1, $item2) {
+      if(trim($item1) == trim($item2)) {
+          echo 'selected';
       }
   }
 ?>
@@ -74,40 +83,12 @@
     $(document).ready(function() {
 
       $("input").attr("autocomplete","off");
-      
-      $('.chips-placeholder').material_chip({
-          placeholder: 'Enter a tag',
-          secondaryPlaceholder: '+Tag',
-       });
-
-      $('#selectIMG').click(function(){
-          $('#imgInp').trigger('click');
-      });
 
       $('#form_submit').click(function() {
-        if($('#imgInp').val() != '' && $('#item_name').val() != '') {
-            $(this).prop('disabled', true);
-            $('#new_post').submit();
-        }
+        $('#new_post').submit();
       });
 
       $('select').material_select();
-
-      function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                
-                reader.onload = function (e) {
-                    $('#imgOutp').attr('src', e.target.result);
-                }
-                
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        $('#imgInp').change(function() {
-        readURL(this);
-      });
     });
   </script>
 
@@ -121,7 +102,7 @@
       <nav>
         <div class="nav-wrapper pink darken-1">
           <ul id="nav-mobile">
-            <span class="brand-logo center"><img src="images/items.png" alt="OOTDme" height="65" style="margin-top:-5px;"></span>
+            <a href="<?php echo $prev_url; ?>" class="brand-logo center"><img src="images/items.png" alt="OOTDme" height="65" style="margin-top:-5px;"></a>
             <li><a href="items.php"><i class="material-icons">arrow_back</i></a></li>
           </ul>
         </div>
@@ -137,15 +118,13 @@
    
       <div class = "col s12">
     <form id='new_post' method="post" enctype="multipart/form-data">
-      <img id="imgOutp" src="images/black.png" style='width: 100%; height:200px; margin-top: 10px;'/>
-      <input type="file" name="imgInp" id='imgInp' accept="image/*" style='display: none;'>
+      <img id="imgOutp" src="<?php echo $item['photo']; ?>" style='width: 100%; height:200px; margin-top: 10px;'/>
       </div>
-        <i id='selectIMG' class="material-icons center">camera_alt</i>
 		    <div class="row">
 			    <div class="col s12">
 			      	<div class="row">
 				        <div class="input-field col s12">
-				         <input id="item_name" name='item_name' type="text" value=''>
+				         <input id="item_name" name='item_name' type="text" value='<?php echo $item['name']; ?>'>
 				          <label for="item_name">Item Name</label>
 				        </div>
 				        <div class='col s12'>
@@ -155,7 +134,7 @@
 				        			$brands = fetchAll('item_brands');
 				        			foreach($brands as $brand) {
 				        		?>
-				        			<option><?php echo $brand['name']; ?></option>
+				        			<option <?php selected($brand['name'], $item['brand']); ?>><?php echo $brand['name']; ?></option>
 				        		<?php } ?>
 				        	</select>
 				        </div>
@@ -166,16 +145,18 @@
 				        			$types = fetchAll_sort('item_categories', 'name', 'ASC');
 				        			foreach($types as $type) {
 				        		?>
-				        			<option><?php echo $type['name']; ?></option>
+				        			<option <?php selected($type['name'], $item['type']); ?>>
+                        <?php echo $type['name']; ?>       
+                      </option>
 				        		<?php } ?>
 				        	</select>
 				        </div>
-						<div class="input-field col s12">
-					          <input id="item_size" name='item_size' type="text" value=' '>
+						  <div class="input-field col s12">
+					          <input id="item_size" name='item_size' type="text" value='<?php echo $item['size']; ?>'>
 					          <label for="item_size">Item Size</label>
 					    </div>
               <div class="input-field col s12">
-                    <input id="item_qty" name='item_qty' type="number" value='1' min='1'>
+                    <input id="item_qty" name='item_qty' type="number" value='<?php echo $item['quantity']; ?>' min='1'>
                     <label for="item_qty">Quantity</label>
               </div>
 				    </div>
@@ -184,7 +165,7 @@
 
           </button> 
     </form>
-           <center> <button class="btn waves-effect waves-light red darken-2" id='form_submit'>Add </center>
+           <center> <button class="btn waves-effect waves-light red darken-2" id='form_submit'>Save </center>
   </div>
 </div>
 </div>

@@ -60,7 +60,7 @@
    <div class="navbar-fixed">
       <nav>
         <div class="nav-wrapper pink darken-1">
-          <a href="#" class="brand-logo center"><img src="images/garage.png" alt="OOTDme" height="65" style="margin-top:-5px;"></a>
+          <a href="#" class="brand-logo center"><img src="images/logo.png" alt="OOTDme" height="65" style="margin-top:-5px;"></a>
           <ul id="nav-mobile">
             <li><a href="index.php"><i class="material-icons">arrow_back</i></a></li>
           </ul>
@@ -69,30 +69,53 @@
   </div>
    <!-- Navigation Bar -->
 <div class="row">
+    <blockquote>
+        <h5>
+            <strong>Pre-Loved Items Sale</strong>
+        </h5>
+    </blockquote>
     <?php
       $garage_sales = fetchGarageSales($id);
       if(count($garage_sales)>0) {
     ?>  
           <?php foreach($garage_sales as $event) { ?>
           <div class="col s12">
-            <div class="card">  
-              <a class='dropdown-button right' href='#' data-activates='dropdown<?php echo $event['id']; ?>'><br />
-              <i class="material-icons">more_vert</i>
-              </a>
+            <div class="card <?php if_joint_garage($event['id']); ?>">  
+              <?php if($event['chaser_id'] == $id) { ?>
+                <a class='dropdown-button right' href='#' data-activates='dropdown<?php echo $event['id']; ?>'><br />
+                <span class='pink-text darken-1'>
+                  <i class="material-icons">more_vert</i>
+                </span>
+                </a>
+              <?php } ?>
               <ul id='dropdown<?php echo $event['id']; ?>' class='dropdown-content'>
-              <li><a href="backend/delete_garage.php?garage_id=<?php echo $event['id']; ?>"><span class='pink-text darken-1'>Delete</span></a></li>
+                  <li><a href="garage_edit.php?garage_id=<?php echo $event['id']; ?>">
+                      <span class='pink-text darken-1'>Edit
+                      </span>
+                  </a></li>
+                  <li><a href="backend/delete_garage.php?garage_id=<?php echo $event['id']; ?>">
+                      <span class='pink-text darken-1'>Delete
+                      </span>
+                  </a></li>
               </ul>    
-              <div class='card-content'>
-              <a href='garage_sale_items.php?garage_id=<?php echo $event['id']; ?>'>
-              <span class="card-title black-text"><b><?php echo $event['name']; ?></b></span>
-              </a>
+              <div class='card-content z-depth-3'>
+            
               <p class='flow-text black-text'>
-                <?php
-                  $start = date('F j' , strtotime($event['start_date'])); 
-                  $end = date('F j' , strtotime($event['end_date'])); 
-                  echo $start . ' - ' . $end . '<br />';
-                  echo $event['start_time'] . ' - ' . $event['end_time'] . '<br />';
-                  echo $event['place'];
+                <strong>
+                <?php 
+                          $start_date = date('F j' , strtotime($event['start_date'])); 
+                          $end_date = date('F j' , strtotime($event['end_date']));    
+                ?>
+                <a href='garage_sale_items.php?garage_id=<?php echo $event['id']; ?>'>
+                <span class='black-text'>
+                  <?php echo $start_date . ' - ' . $end_date; ?>
+                </span>
+                </a>
+                </strong>
+                <?php 
+                    echo '<br />' . $event['start_time'] . ' - ' . $event['end_time'] . '<br />';
+                    echo $event['place'] . '<br /><br />'; 
+                    echo $event['description'];
                 ?>
               </p>
               </div>
@@ -102,7 +125,7 @@
     <?php } ?>
 </div>
 <div class="fixed-action-btn">
-<a href='garage_sales_add.php'class="btn-floating btn-large red">
+<a href='garage_sales_add.php' class="btn-floating btn-large red darken-2">
 <i class="large material-icons">add</i>
 </a>
 </div>

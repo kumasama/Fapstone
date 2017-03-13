@@ -115,7 +115,7 @@
    </div>
     <div id='search_bar' class="navbar-fixed" >
       <nav>
-        <div class="nav-wrapper pink darken-1">
+        <div class="nav-wrapper pink darken-2">
           <form>
             <div class="input-field">
               <input name='closet_id' type='hidden' value='<?php echo $closet_id; ?>'/>
@@ -150,6 +150,7 @@
               </p>
               <div class='secondary-content' style='margin-top: 53px;'>
                   <a onclick='openModal("<?php echo $item['photo']; ?>")'><span class='red-text text-darken-2'><i class="material-icons">zoom_in</i></span></a>&nbsp; &nbsp; &nbsp;
+                   <a href="closet_id=<?php echo $closet_id; ?>&item_edit.php?item_id=<?php echo $item['id']; ?>"><span class='pink-text text-darken-2'><i class="material-icons">mode_edit</i></span></a> &nbsp; &nbsp; &nbsp;
                   <a href="delete_closet_item.php?closet_id=<?php echo $closet_id; ?>&closet_item_id=<?php echo $closet_item['id']; ?>">
                 <span class='red-text text-darken-2'>
                   <i class="material-icons">remove_circle</i>
@@ -193,6 +194,7 @@
           </p>
           <div class='secondary-content' style='margin-top: 53px;'>
               <a onclick='openModal("<?php echo $item['photo']; ?>")'><span class='red-text text-darken-2'><i class="material-icons">zoom_in</i></span></a>&nbsp; &nbsp; &nbsp;
+               <a href="item_edit.php?closet_id=<?php echo $closet_id; ?>&item_id=<?php echo $item['id']; ?>"><span class='pink-text text-darken-2'><i class="material-icons">mode_edit</i></span></a> &nbsp; &nbsp; &nbsp;
               <a href="delete_closet_item.php?closet_id=<?php echo $closet_id; ?>&closet_item_id=<?php echo $closet_item['id']; ?>">
                 <span class='red-text text-darken-2'>
                   <i class="material-icons">remove_circle</i>
@@ -228,7 +230,7 @@ if($can_transfer) {
     foreach($closets as $closet) {
         echo '<option value='. $closet['id'] .'>';
         echo $closet['name'];
-        echo '<option>';
+        echo '</option>';
     }
 ?>
         </select>
@@ -251,7 +253,7 @@ if($can_transfer) {
     </form>
   </div>  
     <div class="fixed-action-btn">
-    <a href='closet_items_add.php?closet_id=<?php echo $closet_id; ?>'class="btn-floating btn-large red">
+    <a href='closet_items_add.php?closet_id=<?php echo $closet_id; ?>' class="btn-floating btn-large red darken-2">
       <i class="large material-icons">add</i>
     </a>
   </div>

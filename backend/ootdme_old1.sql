@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 07, 2017 at 08:10 AM
+-- Generation Time: Mar 06, 2017 at 03:52 PM
 -- Server version: 5.7.11
 -- PHP Version: 5.6.19
 
@@ -121,31 +121,6 @@ CREATE TABLE `complaints_user` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `garage_chasers`
---
-
-CREATE TABLE `garage_chasers` (
-  `id` int(11) NOT NULL,
-  `garage_id` int(11) NOT NULL,
-  `chaser_id` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `garage_invitations`
---
-
-CREATE TABLE `garage_invitations` (
-  `id` int(11) NOT NULL,
-  `garage_id` int(11) NOT NULL,
-  `chaser_id` int(11) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `garage_items`
 --
 
@@ -182,9 +157,8 @@ CREATE TABLE `items` (
   `id` int(11) NOT NULL,
   `name` varchar(127) NOT NULL,
   `type` varchar(63) NOT NULL,
-  `brand` varchar(127) NOT NULL,
-  `size` varchar(15) NOT NULL,
-  `quantity` int(11) NOT NULL DEFAULT '1',
+  `brand` varchar(63) DEFAULT NULL,
+  `size` varchar(10) DEFAULT NULL,
   `photo` varchar(255) NOT NULL,
   `chaser_id` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -509,18 +483,6 @@ ALTER TABLE `complaints_user`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `garage_chasers`
---
-ALTER TABLE `garage_chasers`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `garage_invitations`
---
-ALTER TABLE `garage_invitations`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `garage_items`
 --
 ALTER TABLE `garage_items`
@@ -612,16 +574,6 @@ ALTER TABLE `complaints_post`
 -- AUTO_INCREMENT for table `complaints_user`
 --
 ALTER TABLE `complaints_user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `garage_chasers`
---
-ALTER TABLE `garage_chasers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `garage_invitations`
---
-ALTER TABLE `garage_invitations`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `garage_items`
